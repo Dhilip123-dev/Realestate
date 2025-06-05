@@ -2,70 +2,131 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { GrCaretNext, GrCaretPrevious } from "react-icons/gr";
-import { MdDelete } from "react-icons/md";
-import { GiCheckMark } from "react-icons/gi";
-import { MdClose } from "react-icons/md";
+import { 
+  MdDelete, 
+  MdOutlineWaterDrop,
+  MdOutlineMicrowave, 
+  MdClose, 
+  MdDining, 
+  MdOutlineSecurity, 
+  MdOutlineMeetingRoom 
+} from "react-icons/md";
+import { 
+  GiCheckMark, 
+  GiGasStove, 
+  GiGymBag, 
+  GiLift, 
+  GiParkBench, 
+  GiPowerGenerator, 
+  GiSoccerBall 
+} from "react-icons/gi";
 import { Label } from '@/components/ui/label';
-import { BsPatchQuestionFill } from "react-icons/bs";
+import { BsPatchQuestionFill, BsPhone } from "react-icons/bs";
 import { FcInfo } from "react-icons/fc";
 import { IoMdCheckmarkCircle } from "react-icons/io";
+import { PiTelevisionSimpleBold, PiWashingMachineLight } from "react-icons/pi";
+import { RiFridgeLine, RiSofaLine } from "react-icons/ri";
+import { TbAirConditioning } from "react-icons/tb";
+import { FaBed, FaChild, FaDog, FaSwimmingPool } from "react-icons/fa";
+import { FaPersonChalkboard, FaWatchmanMonitoring } from "react-icons/fa6";
+import { LuHeater } from "react-icons/lu";
+import { BiCctv } from "react-icons/bi";
 
 const PostProperty = () => {
-  // Step 1
-  const [selectedAction, setSelectedAction] = useState('');
-  const [selectedType, setSelectedType] = useState('');
+  // State for Step 1 - Property Basics
+  const [selectedAction, setSelectedAction] = useState('Rent');
+  const [selectedType, setSelectedType] = useState('Commercial');
   const [selectedSubtype, setSelectedSubtype] = useState('');
-  const [step, setStep] = useState(1);
-  const [step1Errors, setStep1Errors] = useState({
-    action: false,
-    type: false,
-    subtype: false
-  });
-
-  // Step 2
+  
+  // State for Step 2 - Location & Features
   const [city, setCity] = useState("");
   const [locality, setLocality] = useState("");
   const [subLocality, setSubLocality] = useState("");
-  const [society, setSociety] = useState("");
-  const [selectedFeatures, setSelectedFeatures] = useState({
+  const [propertyTitle, setPropertyTitle] = useState("");
+  const [googleMapLink, setGoogleMapLink] = useState('');
+
+  // State for Step 3 - Property Details
+  const [propertyDetails, setPropertyDetails] = useState({
+    bedrooms: null,
+    otherRooms: [],
+    bathrooms: null,
+    balconies: null,
+    carpetArea: "",
+    areaUnit: "sq.ft.",
+    furnishing: "",
     amenities: [],
-    propertyFeatures: [],
-    societyFeatures: [],
-  });
-  const [step2Errors, setStep2Errors] = useState({
-    city: false,
-    locality: false,
-    subLocality: false,
-    society: false
+    coveredParking: 0,
+    openParking: 0,
+    totalFloors: "",
+    propertyOnFloor: "",
+    floorOptions: [],
+    availability: "",
+    availabilityDate: '',
+    propertyAge: "",
+    possessionBy: "",
+    possessionDate: "",
+    plotArea: "",
+    plotUnit: '',
+    roadWidth: "",
+    roadWidthUnit: "feet",
+    cornerPlot: "",
+    gatedCommunity: "",
+    allowSplit: "",
+    totalLandArea: '',
+    splitCount: '',
+    eachSplitArea: '',
+    facing: "",
+    legalClearance: false,
+    monthlyRent: "",
+    deposit: "",
+    builtUpArea: "",
+    superBuiltUpArea: "",
+    floorNumber: "",
+    bachelorsAllowed: false,
+    foodIncluded: false,
+    meals: {
+      Breakfast: {
+        enabled: false,
+        startTime: '',
+        endTime: ''
+      },
+      Lunch: {
+        enabled: false,
+        startTime: '',
+        endTime: ''
+      },
+      Dinner: {
+        enabled: false,
+        startTime: '',
+        endTime: ''
+      }
+    },
+    roomType: "",
+    pgAmenities: [],
+    shopFrontage: "",
+    openArea: "",
+    roadFacing: "",
+    ownershipType: "",
+    propertyApproval: '',
+    landUseZone: '',
+    storageAvailable: false,
+    businessTransfer: false,
+    showWindow: false,
+    leaseDuration: "",
+    rentEscalation: "",
+    noticePeriod: "",
+    preferredTenants: [],
+    lockInPeriod: "",
+    roomSharing: "",
+    curfewTime: "",
+    visitorPolicy: "",
+    laundryService: false,
+    conferenceRooms: 0,
+    workstations: 0,
+    pantryAvailable: false
   });
 
-  // Step 3
-  const [bedrooms, setBedrooms] = useState(null);
-  const [bathrooms, setBathrooms] = useState(null);
-  const [balconies, setBalconies] = useState(null);
-  const [carpetArea, setCarpetArea] = useState("");
-  const [areaUnit, setAreaUnit] = useState("sq.ft.");
-  const [otherRooms, setOtherRooms] = useState([]);
-  const [furnishing, setFurnishing] = useState("");
-  const [coveredParking, setCoveredParking] = useState(0);
-  const [openParking, setOpenParking] = useState(0);
-  const [totalFloors, setTotalFloors] = useState("");
-  const [propertyOnFloor, setPropertyOnFloor] = useState("");
-  const [availability, setAvailability] = useState("");
-  const [propertyAge, setPropertyAge] = useState("");
-  const [possessionBy, setPossessionBy] = useState("");
-  const [step3Errors, setStep3Errors] = useState({
-    bedrooms: false,
-    bathrooms: false,
-    totalFloors: false,
-    propertyOnFloor: false,
-    availability: false,
-    propertyAge: false,
-    possessionBy: false,
-    carpetArea: false
-  });
-
-  // Step 4 
+  // State for Step 4 - Media
   const [photos, setPhotos] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [coverPhotoIndex, setCoverPhotoIndex] = useState(null);
@@ -73,313 +134,288 @@ const PostProperty = () => {
   const [videoURL, setVideoURL] = useState(null);
   const videoInputRef = useRef(null);
   const [showVideoGuidelines, setShowVideoGuidelines] = useState(false);
-  const [step4Errors, setStep4Errors] = useState({
-    photos: false
+
+  // State for Step 5 - Pricing
+  const [pricing, setPricing] = useState({
+    ownership: '',
+    expectedPrice: '',
+    pricePerSqft: '',
+    allInclusive: false,
+    taxExcluded: false,
+    priceNegotiable: false,
+    lease: false,
+    additionalCharges:[],
+    brokerage: '',
+    propertyDescription: '',
+    monthlyRent: '',
+    deposit: '',
+    leaseDuration: '',
+    rentEscalation: '',
+    noticePeriod: ''
   });
 
-  // Step 5
-  const [ownership, setOwnership] = useState('');
-  const [expectedPrice, setExpectedPrice] = useState('');
-  const [pricePerSqft, setPricePerSqft] = useState('');
-  const [allInclusive, setAllInclusive] = useState(false);
-  const [taxExcluded, setTaxExcluded] = useState(false);
-  const [priceNegotiable, setPriceNegotiable] = useState(false);
-  const [brokerage, setBrokerage] = useState('');
-  const [isHovered, setIsHovered] = useState(false);
-  const [propertyDescription, setPropertyDescription] = useState('');
-  const [step5Errors, setStep5Errors] = useState({
-    ownership: false,
-    expectedPrice: false,
-    pricePerSqft: false,
-    brokerage: false,
-    description: false
+  // State for Step 6 - Company Details
+  const [companyDetails, setCompanyDetails] = useState({
+    licenseType: "",
+    fullName: "",
+    email: "",
+    phone: "",
+    address: "",
+    companyName: "",
+    companyAddress1: "",
+    location: "",
+    companyDesc: "",
+    reraStatus: ""
   });
 
-  // Step 6
-  const [reraStatus, setReraStatus] = useState("");
-  const [licenseType, setLicenseType] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [companyAddress1, setCompanyAddress1] = useState("");
-  const [location, setLocation] = useState("");
-  const [companyDesc, setCompanyDesc] = useState("");
-  const [step6Errors, setStep6Errors] = useState({
-    reraStatus: false,
-    licenseType: false,
-    companyName: false,
-    companyAddress1: false,
-    location: false,
-    companyDesc: false
-  });
-
+  // Form State
+  const [step, setStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const fileInputRef = useRef(null);
 
-  const propertySubtypes = {
+  // UI State
+  const [showOtherRooms, setShowOtherRooms] = useState(false);
+  const [showAllOtherRooms, setShowAllOtherRooms] = useState(false);
+  const [showAmenitiesFlat, setShowAmenitiesFlat] = useState(false);
+  const [selectedAmenities, setSelectedAmenities] = useState(propertyDetails.amenities || []);
+  const [showAllAmenities, setShowAllAmenities] = useState(false);
+  const [showAdditionalCharges, setShowAdditionalCharges] = useState(false);
+
+  // Property configuration with all subtypes and fields
+  const propertyConfig = {
     Residential: {
-      Rent: ['Flat/Apartment', 'Independent House / Villa', 'Independent / Builder Floor', '1 RK/ Studio Apartment', 'Farmhouse', 'Other'],
-      Sell: ['Flat/Apartment', 'Independent House / Villa', 'Independent / Builder Floor', 'Plot / Land', '1 RK/ Studio Apartment', 'Farmhouse', 'Other'],
-      PG: ['Boys PG', 'Girls PG', 'Hostel', 'Other']
+      Rent: {
+        subtypes: ['Flat/Apartment', 'Independent House / Villa'],
+        fields: {
+          'Flat/Apartment': {
+            fields: ['bedrooms','otherRooms', 'bathrooms', 'balconies', 'furnishing','amenities', 'floorNumber', 'totalFloors','coveredParking','openParking', 'availability', 'propertyAge','facing','preferredTenants'],
+            pricingFields: ['monthlyRent','lease', 'deposit', 'maintenanceFee', 'priceNegotiable', 'additionalCharges', 'brokerage']
+          },
+          'Independent House / Villa': {
+            fields: ['bedrooms','otherRooms', 'bathrooms','balconies','furnishing','coveredParking','availability', 'propertyAge','facing', 'preferredTenants'],
+            pricingFields: ['monthlyRent','lease', 'deposit', 'priceNegotiable', 'brokerage']
+          },
+          'Independent / Builder Floor': {
+            fields: ['bedrooms', 'bathrooms', 'carpetArea', 'furnishing', 'floorNumber', 'totalFloors', 'propertyAge', 'possessionBy'],
+            pricingFields: ['monthlyRent', 'deposit', 'priceNegotiable', 'brokerage']
+          }
+        }
+      },
+      Sell: {
+        subtypes: ['Flat/Apartment', 'Independent House / Villa', 'Plot / Land'],
+        fields: {
+          'Flat/Apartment': {
+            fields: ['bedrooms','otherRooms', 'bathrooms', 'balconies', 'carpetArea', 'furnishing','amenities', 'floorNumber', 'totalFloors','coveredParking','openParking', 'availability', 'propertyAge', 'possessionBy'],
+            pricingFields: ['expectedPrice', 'pricePerSqft', 'allInclusive', 'taxExcluded', 'priceNegotiable', 'brokerage']
+          },
+          'Independent House / Villa': {
+            fields: ['expectedPrice', 'bedrooms', 'bathrooms', 'carpetArea', 'furnishing', 'plotArea', 'facing', 'propertyAge', 'possessionBy'],
+            pricingFields: ['expectedPrice', 'pricePerSqft', 'allInclusive', 'taxExcluded', 'priceNegotiable', 'brokerage']
+          },
+          'Independent / Builder Floor': {
+            fields: ['expectedPrice', 'bedrooms', 'bathrooms', 'carpetArea', 'furnishing', 'floorNumber', 'totalFloors', 'propertyAge', 'possessionBy'],
+            pricingFields: ['expectedPrice', 'pricePerSqft', 'allInclusive', 'taxExcluded', 'priceNegotiable', 'brokerage']
+          },
+          'Plot / Land': {
+            fields: ['plotArea','roadWidth','facing','cornerPlot','gatedCommunity','allowSplit','ownershipType','propertyApproval','landUseZone','possessionBy'],
+            pricingFields: ['expectedPrice', 'pricePerSqft','priceNegotiable', 'allInclusive', 'taxExcluded',  'brokerage']
+          }
+        }
+      }
     },
     Commercial: {
-      Rent: ['Office Space', 'Retail Shop', 'Warehouse', 'Industrial Building', 'Showroom', 'Hotel/Resort', 'Other'],
-      Sell: ['Office Space', 'Retail Shop', 'Warehouse', 'Industrial Building', 'Commercial Land', 'Showroom', 'Other'],
-      PG: []
-    }
-  };
-
-  const features = {
-    amenities: [
-      "Maintenance Staff", "Water Storage", "Security / Fire Alarm", "Visitor Parking",
-      "Feng Shui / Vaastu Compliant", "Park", "Intercom Facility", "Lift(s)"
-    ],
-    propertyFeatures: [
-      "High Ceiling Height", "False Ceiling Lighting", "Piped-gas", "Internet/wi-fi connectivity",
-      "Centrally Air Conditioned", "Water purifier", "Recently Renovated", "Private Garden / Terrace",
-      "Natural Light", "Airy Rooms", "Spacious Interiors"
-    ],
-    societyFeatures: [
-      "Water softening plant", "Shopping Centre", "Fitness Centre / GYM", "Swimming Pool",
-      "Club house / Community Center", "Security Personnel"
-    ]
-  };
-
-  const toggleFeature = (category, feature) => {
-    setSelectedFeatures((prev) => {
-      const updated = prev[category].includes(feature)
-        ? prev[category].filter(f => f !== feature)
-        : [...prev[category], feature];
-      return { ...prev, [category]: updated };
-    });
-  };
-
-  useEffect(() => {
-    setSelectedSubtype('');
-  }, [selectedType, selectedAction]);
-
-  useEffect(() => {
-    if (isSubmitted) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  }, [isSubmitted]);
-
-  // Validation functions for each step
-  const validateStep1 = () => {
-    const errors = {
-      action: !selectedAction,
-      type: !selectedType,
-      subtype: !selectedSubtype
-    };
-    setStep1Errors(errors);
-    return !Object.values(errors).some(Boolean);
-  };
-
-  const validateStep2 = () => {
-    const errors = {
-      city: !city.trim(),
-      locality: !locality.trim(),
-      subLocality: !subLocality.trim(),
-      society: !society.trim()
-    };
-    setStep2Errors(errors);
-    return !Object.values(errors).some(Boolean);
-  };
-
-  const validateStep3 = () => {
-    const errors = {
-      bedrooms: !bedrooms,
-      bathrooms: !bathrooms,
-      totalFloors: !totalFloors,
-      propertyOnFloor: !propertyOnFloor,
-      availability: !availability,
-      propertyAge: availability === "Ready to move" && !propertyAge,
-      possessionBy: availability === "Under construction" && !possessionBy,
-      carpetArea: !carpetArea || isNaN(Number(carpetArea)) || Number(carpetArea) <= 0
-    };
-    setStep3Errors(errors);
-    return !Object.values(errors).some(Boolean);
-  };
-
-  const validateStep4 = () => {
-    const errors = {
-      photos: photos.length < 3
-    };
-    setStep4Errors(errors);
-    return !Object.values(errors).some(Boolean);
-  };
-
-  const validateStep5 = () => {
-    const errors = {
-      ownership: !ownership,
-      expectedPrice: !expectedPrice || isNaN(Number(expectedPrice)) || Number(expectedPrice) <= 0,
-      pricePerSqft: !pricePerSqft || isNaN(Number(pricePerSqft)) || Number(pricePerSqft) <= 0,
-      brokerage: !brokerage,
-      description: propertyDescription.trim().length < 30
-    };
-    setStep5Errors(errors);
-    return !Object.values(errors).some(Boolean);
-  };
-
-  const validateStep6 = () => {
-    const errors = {
-      reraStatus: !reraStatus,
-      licenseType: !licenseType,
-      companyName: !companyName.trim(),
-      companyAddress1: !companyAddress1.trim(),
-      location: !location.trim(),
-      companyDesc: !companyDesc.trim() || companyDesc.trim().length < 30
-    };
-    setStep6Errors(errors);
-    return !Object.values(errors).some(Boolean);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (step === 6) {
-      if (!validateStep6()) {
-        scrollToFirstError();
-        return;
-      }
-      
-      const formData = {
-        action: selectedAction,
-        type: selectedType,
-        subtype: selectedSubtype,
-        location: { city, locality, subLocality, society },
-        features: selectedFeatures,
-        propertyDetails: {
-          bedrooms,
-          bathrooms,
-          balconies,
-          carpetArea,
-          areaUnit,
-          otherRooms,
-          furnishing,
-          parking: { covered: coveredParking, open: openParking },
-          floors: { total: totalFloors, propertyOn: propertyOnFloor },
-          availability,
-          ...(availability === "Ready to move" ? { propertyAge } : { possessionBy })
-        },
-        media: { photos, coverPhotoIndex, video },
-        pricing: {
-          ownership,
-          expectedPrice,
-          pricePerSqft,
-          allInclusive,
-          taxExcluded,
-          priceNegotiable,
-          brokerage,
-          propertyDescription
-        },
-        companyDetails: {
-          reraStatus,
-          licenseType,
-          companyName,
-          companyAddress1,
-          location,
-          companyDesc
+      Rent: {
+        subtypes: ['Office Space', 'Retail Spaces', 'Warehouses', 'Industrial Building', 'Showroom'],
+        fields: {
+          'Office Space': {
+            fields: ['builtUpArea', 'superBuiltUpArea', 'conferenceRooms', 'workstations', 'pantryAvailable',  'rentEscalation', 'noticePeriod'],
+            pricingFields: ['monthlyRent', 'deposit', 'leaseDuration', 'rentEscalation', 'noticePeriod', 'priceNegotiable', 'brokerage']
+          },
+          'Retail Shop': {
+            fields: ['monthlyRent', 'deposit', 'builtUpArea', 'shopFrontage', 'openArea', 'roadFacing', 'storageAvailable', 'businessTransfer', 'showWindow', 'leaseDuration', 'noticePeriod'],
+            pricingFields: ['monthlyRent', 'deposit', 'leaseDuration', 'noticePeriod', 'priceNegotiable', 'brokerage']
+          },
+          'Warehouse': {
+            fields: ['monthlyRent', 'deposit', 'builtUpArea', 'leaseDuration', 'noticePeriod'],
+            pricingFields: ['monthlyRent', 'deposit', 'leaseDuration', 'noticePeriod', 'priceNegotiable', 'brokerage']
+          },
+          'Industrial Building': {
+            fields: ['monthlyRent', 'deposit', 'builtUpArea', 'leaseDuration', 'noticePeriod'],
+            pricingFields: ['monthlyRent', 'deposit', 'leaseDuration', 'noticePeriod', 'priceNegotiable', 'brokerage']
+          },
+          'Showroom': {
+            fields: ['monthlyRent', 'deposit', 'builtUpArea', 'shopFrontage', 'roadFacing', 'leaseDuration', 'noticePeriod'],
+            pricingFields: ['monthlyRent', 'deposit', 'leaseDuration', 'noticePeriod', 'priceNegotiable', 'brokerage']
+          }
         }
-      };
-      
-      console.log('Form submitted:', formData);
-      setIsSubmitted(true);
-      resetFormFields();
+      },
+      Sell: {
+        subtypes: ['Office Space', 'Retail Spaces', 'Warehouses', 'Industrial Building', 'Showroom'],
+        fields: {
+          'Office Space': {
+            fields: ['builtUpArea', 'superBuiltUpArea', 'furnishing', 'conferenceRooms', 'workstations', 'pantryAvailable'],
+            pricingFields: ['expectedPrice', 'pricePerSqft', 'allInclusive', 'taxExcluded', 'priceNegotiable', 'brokerage']
+          },
+          'Retail Shop': {
+            fields: ['expectedPrice', 'builtUpArea', 'shopFrontage', 'openArea', 'roadFacing', 'storageAvailable', 'businessTransfer', 'showWindow'],
+            pricingFields: ['expectedPrice', 'pricePerSqft', 'allInclusive', 'taxExcluded', 'priceNegotiable', 'brokerage']
+          },
+          'Warehouse': {
+            fields: ['expectedPrice', 'builtUpArea'],
+            pricingFields: ['expectedPrice', 'pricePerSqft', 'allInclusive', 'taxExcluded', 'priceNegotiable', 'brokerage']
+          },
+          'Industrial Building': {
+            fields: ['expectedPrice', 'builtUpArea'],
+            pricingFields: ['expectedPrice', 'pricePerSqft', 'allInclusive', 'taxExcluded', 'priceNegotiable', 'brokerage']
+          },
+          'Commercial Land': {
+            fields: ['expectedPrice', 'plotArea', 'facing', 'legalClearance'],
+            pricingFields: ['expectedPrice', 'pricePerSqft', 'allInclusive', 'taxExcluded', 'priceNegotiable', 'brokerage']
+          },
+          'Showroom': {
+            fields: ['expectedPrice', 'builtUpArea', 'shopFrontage', 'roadFacing'],
+            pricingFields: ['expectedPrice', 'pricePerSqft', 'allInclusive', 'taxExcluded', 'priceNegotiable', 'brokerage']
+          }
+        }
+      }
     }
   };
 
-  const scrollToFirstError = () => {
-    const firstError = document.querySelector('.border-red-500, .text-red-500');
-    if (firstError) {
-      firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // Amenities categories
+  const amenitiesCategories = [
+    {
+      title: "Flat Furnishings",
+      items: [
+        { label: "Dining Table", icon: <MdDining className="text-xl" /> },
+        { label: "Washing Machine", icon: <PiWashingMachineLight className="text-xl" /> },
+        { label: "Sofa", icon: <RiSofaLine className="text-xl" /> },
+        { label: "Microwave", icon: <MdOutlineMicrowave className="text-xl" /> },
+        { label: "Stove", icon: <GiGasStove className="text-xl" /> },
+        { label: "Fridge", icon: <RiFridgeLine className="text-xl" /> },
+        { label: "Water Purifier", icon: <MdOutlineWaterDrop className="text-xl" /> },
+        { label: "Gas Pipeline", icon: <GiGasStove className="text-xl" /> },
+        { label: "AC", icon: <TbAirConditioning className="text-xl" /> },
+        { label: "Bed", icon: <FaBed className="text-xl" /> },
+        { label: "TV", icon: <PiTelevisionSimpleBold className="text-xl" /> },
+        { label: "Cupboard", icon: <FaPersonChalkboard className="text-xl" /> },
+        { label: "Heater", icon: <LuHeater className="text-xl" /> },
+      ]
+    },
+    {
+      title: "Society Amenities",
+      items: [
+        { label: "Lift", icon: <GiLift className="text-xl" /> },
+        { label: "CCTV", icon: <BiCctv className="text-xl" /> },
+        { label: "Gym", icon: <GiGymBag className="text-xl" /> },
+        { label: "Garden", icon: <GiParkBench className="text-xl" /> },
+        { label: "Kids Area", icon: <FaChild className="text-xl" /> },
+        { label: "Sports", icon: <GiSoccerBall className="text-xl" /> },
+        { label: "Swimming Pool", icon: <FaSwimmingPool className="text-xl" /> },
+        { label: "Intercom", icon: <BsPhone className="text-xl" /> },
+        { label: "Gated Community", icon: <MdOutlineSecurity className="text-xl" /> },
+        { label: "Club House", icon: <MdOutlineMeetingRoom className="text-xl" /> },
+        { label: "Community Hall", icon: <MdOutlineMeetingRoom className="text-xl" /> },
+        { label: "Regular Water Supply", icon: <MdOutlineWaterDrop className="text-xl" /> },
+        { label: "Power Backup", icon: <GiPowerGenerator className="text-xl" /> },
+        { label: "Pet Allowed", icon: <FaDog className="text-xl" /> },
+        { label: "Security", icon: <FaWatchmanMonitoring className="text-xl" /> },
+      ]
     }
+  ];
+
+  // Helper functions
+  const formatTime12Hour = (time) => {
+    if (!time) return '';
+    const [hour, minute] = time.split(':');
+    const h = parseInt(hour);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const formattedHour = h % 12 === 0 ? 12 : h % 12;
+    return `${formattedHour}:${minute} ${ampm}`;
   };
 
-  const resetFormFields = () => {
-    setSelectedAction('');
-    setSelectedType('');
-    setSelectedSubtype('');
-    setCity('');
-    setLocality('');
-    setSubLocality('');
-    setSociety('');
-    setSelectedFeatures({
-      amenities: [],
-      propertyFeatures: [],
-      societyFeatures: []
+  // Get available subtypes based on selected type and action
+  const getAvailableSubtypes = () => {
+    if (!selectedType || !selectedAction) return [];
+    return propertyConfig[selectedType]?.[selectedAction]?.subtypes || [];
+  };
+
+  // Get fields to show based on selected type, action and subtype
+  const getFieldsToShow = () => {
+    if (!selectedType || !selectedAction || !selectedSubtype) return [];
+    return propertyConfig[selectedType]?.[selectedAction]?.fields?.[selectedSubtype]?.fields || [];
+  };
+
+  // Get pricing fields to show based on selected type and action
+  const getPricingFieldsToShow = () => {
+    if (!selectedType || !selectedAction || !selectedSubtype) return [];
+    return propertyConfig[selectedType]?.[selectedAction]?.fields?.[selectedSubtype]?.pricingFields || [];
+  };
+
+  // Event handlers
+  const handlePropertyDetailChange = (field, value) => {
+    setPropertyDetails(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handlePropertyFloorDetailChange = (key, value) => {
+    setPropertyDetails(prev => {
+      const updated = { ...prev, [key]: value };
+  
+      if (key === "totalFloors") {
+        const numFloors = parseInt(value);
+        if (!isNaN(numFloors) && numFloors > 0) {
+          const floorOptions = ["Ground Floor"];
+          for (let i = 1; i <= numFloors; i++) {
+            floorOptions.push(i.toString());
+          }
+          updated.floorOptions = floorOptions;
+          updated.floorNumber = ""; // reset floor number
+        } else {
+          updated.floorOptions = [];
+          updated.floorNumber = "";
+        }
+      }
+  
+      return updated;
     });
-    setBedrooms(null);
-    setBathrooms(null);
-    setBalconies(null);
-    setCarpetArea('');
-    setAreaUnit('sq.ft.');
-    setOtherRooms([]);
-    setFurnishing('');
-    setCoveredParking(0);
-    setOpenParking(0);
-    setTotalFloors('');
-    setPropertyOnFloor('');
-    setAvailability('');
-    setPropertyAge('');
-    setPossessionBy('');
-    setPhotos([]);
-    setCoverPhotoIndex(null);
-    setVideo(null);
-    setOwnership('');
-    setExpectedPrice('');
-    setPricePerSqft('');
-    setAllInclusive(false);
-    setTaxExcluded(false);
-    setPriceNegotiable(false);
-    setBrokerage('');
-    setPropertyDescription('');
-    setReraStatus('');
-    setLicenseType('');
-    setCompanyName('');
-    setCompanyAddress1('');
-    setLocation('');
-    setCompanyDesc('');
-    setStep(1);
   };
 
-  const handleNext = () => {
-    let isValid = true;
-    
-    switch(step) {
-      case 1:
-        isValid = validateStep1();
-        break;
-      case 2:
-        isValid = validateStep2();
-        break;
-      case 3:
-        isValid = validateStep3();
-        break;
-      case 4:
-        isValid = validateStep4();
-        break;
-      case 5:
-        isValid = validateStep5();
-        break;
-      default:
-        break;
-    }
-
-    if (!isValid) {
-      scrollToFirstError();
-      return;
-    }
-
-    setStep(step + 1);
+  const handlePricingChange = (field, value) => {
+    setPricing(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
-  const handleBack = () => setStep(step - 1);
+  const handleCompanyDetailChange = (field, value) => {
+    setCompanyDetails(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
 
-  const fileInputRef = useRef(null);
+  const toggleAmenity = (amenity) => {
+    setSelectedAmenities(prev => 
+      prev.includes(amenity) 
+        ? prev.filter(a => a !== amenity) 
+        : [...prev, amenity]
+    ); 
+  };
+  
+  const handleSaveAmenities = () => {
+    handlePropertyDetailChange("amenities", selectedAmenities);
+    setShowAmenitiesFlat(false);
+  };
 
   const handlePhotoUpload = (newFiles) => {
     const validFiles = newFiles.filter(file =>
       file.size <= 10 * 1024 * 1024 &&
       ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/gif', 'image/heic', 'image/heif'].includes(file.type)
     );
-  
+
     const newPhotoData = validFiles.map(file => ({
       file,
       preview: URL.createObjectURL(file)
@@ -389,17 +425,12 @@ const PostProperty = () => {
       alert("You can only upload up to 50 photos.");
       return;
     }
-  
+
     const updatedPhotos = [...photos, ...newPhotoData].slice(0, 50);
     setPhotos(updatedPhotos);
-  
+
     if (updatedPhotos.length > 5) {
       setCurrentIndex(Math.max(0, updatedPhotos.length - 5));
-    }
-    
-    // Clear photo error if any
-    if (updatedPhotos.length >= 3 && step4Errors.photos) {
-      setStep4Errors(prev => ({ ...prev, photos: false }));
     }
   };
 
@@ -415,37 +446,1690 @@ const PostProperty = () => {
       setCoverPhotoIndex(coverPhotoIndex - 1);
     }
   };
-  
+
   const handleVideoUpload = (file) => {
     if (!file) return;
-  
+
     const allowedTypes = ["video/mp4", "video/quicktime", "video/x-m4v"];
     if (!allowedTypes.includes(file.type)) {
       alert("Unsupported video format. Please upload .mp4, .mov or .m4v files.");
       return;
     }
-  
+
     if (file.size > 50 * 1024 * 1024) {
       alert("Upload file too large. Video must be under 50MB.");
-      if (videoInputRef.current) {
-        videoInputRef.current.value = "";
-      }
+      if (videoInputRef.current) videoInputRef.current.value = "";
       return;
     }
-  
+
     const fileURL = URL.createObjectURL(file); 
     setVideo(file);
     setVideoURL(fileURL);
   };
 
+  // Form navigation
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitted(true);
+  };
+
+  const handleNext = () => {
+    setStep(prevStep => Math.min(prevStep + 1, 7));
+  };
+
+  const handleBack = () => {
+    setStep(prevStep => Math.max(prevStep - 1, 1));
+  };
+
+  // Effects
+  useEffect(() => {
+    if (showAmenitiesFlat) {
+      setSelectedAmenities(propertyDetails.amenities || []);
+    }
+  }, [showAmenitiesFlat, propertyDetails.amenities]);
+
+  useEffect(() => {
+    setSelectedSubtype('');
+  }, [selectedType, selectedAction]);
+
+  useEffect(() => {
+    if (isSubmitted) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [isSubmitted]);
+
   useEffect(() => {
     return () => {
-      if (videoURL) {
-        URL.revokeObjectURL(videoURL);
-      }
+      if (videoURL) URL.revokeObjectURL(videoURL);
     };
   }, [videoURL]);
 
+  useEffect(() => {
+    return () => {
+      photos.forEach(photo => URL.revokeObjectURL(photo.preview));
+    };
+  }, [photos]);
+
+
+  // Render functions for each step
+  const renderDynamicFieldsStep4 = () => {
+    const fieldsToShow = getFieldsToShow();
+
+    return (
+      <div className="space-y-6">
+        {/* Room Details Section */}
+        {(fieldsToShow.includes('bedrooms') || fieldsToShow.includes('bathrooms') || fieldsToShow.includes('balconies')) && (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-800">Room Details</h3>
+
+            {fieldsToShow.includes('bedrooms') && (
+              <div>
+                <Label className="block text-sm font-medium mb-2">
+                  No. of Bedrooms
+                </Label>
+                <div className="flex gap-2">
+                  {['1Rk', 1, 2, 3, 4, 5, '5+']
+                    .filter(num => {
+                      if (num === '1Rk') {
+                        return (
+                          ['Sell', 'Rent'].includes(selectedAction) &&
+                          selectedType === 'Residential' &&
+                          selectedSubtype?.toLowerCase().includes('flat')
+                        );
+                      }
+                      return true;
+                    })
+                    .map(num => (
+                      <button
+                        key={num}
+                        type="button"
+                        onClick={() => handlePropertyDetailChange('bedrooms', num)}
+                        className={`w-10 h-10 rounded-full border ${
+                          propertyDetails.bedrooms === num
+                            ? 'bg-blue-600 text-white'
+                            : 'border-gray-300 text-gray-600'
+                        }`}
+                      >
+                        {num}
+                      </button>
+                    ))}
+                </div>
+              </div>
+            )}
+
+            {fieldsToShow.includes('otherRooms') && (
+              <div className="mt-1">
+                <Label
+                  className="block text-sm font-medium mb-1 cursor-pointer text-blue-600 hover:underline"
+                  onClick={() => setShowOtherRooms(prev => !prev)}
+                >
+                  + Other rooms
+                </Label>
+
+                {propertyDetails.otherRooms.length > 0 && (
+                  <div className="flex flex-wrap gap-2 items-center mb-2">
+                    {(showAllOtherRooms ? propertyDetails.otherRooms : propertyDetails.otherRooms.slice(0, 2)).map((room) => (
+                      <span
+                        key={room}
+                        className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium flex items-center"
+                      >
+                        {room}
+                        <button
+                          onClick={() => {
+                            const updatedRooms = propertyDetails.otherRooms.filter(r => r !== room);
+                            handlePropertyDetailChange('otherRooms', updatedRooms);
+                            if (!['Servant Room', 'Store Room'].some(r => updatedRooms.includes(r))) {
+                              setShowAdditionalCharges(false);
+                            }
+                          }}
+                          className="ml-2 text-blue-700 hover:text-red-600 text-sm"
+                          title="Remove"
+                        >
+                          &times;
+                        </button>
+                      </span>
+                    ))}
+
+                    {propertyDetails.otherRooms.length > 2 && (
+                      <button
+                        type="button"
+                        className="text-sm text-blue-600 hover:underline"
+                        onClick={() => setShowAllOtherRooms(!showAllOtherRooms)}
+                      >
+                        {showAllOtherRooms
+                          ? 'Show less'
+                          : `+${propertyDetails.otherRooms.length - 2} more`}
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => {
+                        handlePropertyDetailChange('otherRooms', []);
+                        setShowAdditionalCharges(false);
+                        setShowAllOtherRooms(false);
+                      }}
+                      className="text-red-600 hover:underline text-xs font-medium ml-2"
+                    >
+                      Clear All
+                    </button>
+                  </div>
+                )}
+
+                {showOtherRooms && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {['Pooja Room', 'Study Room', 'Servant Room', 'Store Room'].map(room => (
+                      <button
+                        key={room}
+                        type="button"
+                        onClick={() => {
+                          const newRooms = propertyDetails.otherRooms.includes(room)
+                            ? propertyDetails.otherRooms.filter(r => r !== room)
+                            : [...propertyDetails.otherRooms, room];
+
+                          handlePropertyDetailChange('otherRooms', newRooms);
+
+                          if (['Servant Room', 'Store Room'].some(r => newRooms.includes(r))) {
+                            setShowAdditionalCharges(true);
+                          }
+                        }}
+                        className={`px-4 py-1 rounded border transition text-sm ${
+                          propertyDetails.otherRooms.includes(room)
+                            ? 'bg-blue-600 text-white'
+                            : 'border-gray-300 text-gray-600'
+                        }`}
+                      >
+                        {room}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {fieldsToShow.includes('bathrooms') && (
+              <div>
+                <Label className="block text-sm font-medium mb-2">
+                  No. of Bathrooms
+                </Label>
+                <div className="flex gap-2 mb-1">
+                  {[1, 2, 3, 4, 5].map(num => (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => handlePropertyDetailChange('bathrooms', num)}
+                      className={`w-10 h-10 rounded-full border ${
+                        propertyDetails.bathrooms === num
+                          ? 'bg-blue-600 text-white'
+                          : 'border-gray-300 text-gray-600'
+                      }`}
+                    >
+                      {num}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {fieldsToShow.includes('balconies') && (
+              <div>
+                <Label className="block text-sm font-medium mb-2">Balconies</Label>
+                <div className="flex gap-2">
+                  {[0, 1, 2, 3].map(num => (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => handlePropertyDetailChange('balconies', num)}
+                      className={`w-10 h-10 rounded-full border ${
+                        propertyDetails.balconies === num
+                          ? 'bg-blue-600 text-white'
+                          : 'border-gray-300 text-gray-600'
+                      }`}
+                    >
+                      {num}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => handlePropertyDetailChange('balconies', 4)}
+                    className={`px-4 h-10 rounded border ${
+                      propertyDetails.balconies === 4
+                        ? 'bg-blue-600 text-white'
+                        : 'border-gray-300 text-gray-600'
+                    }`}
+                  >
+                    More than 3
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Commercial Specific Fields */}
+        {selectedType === 'Commercial' && (
+          <>
+            {fieldsToShow.includes('shopFrontage') && (
+              <div className="mt-4">
+                <Label className="block text-sm font-medium mb-1">Shop Frontage (feet)</Label>
+                <input
+                  type="text"
+                  value={propertyDetails.shopFrontage}
+                  onChange={(e) => handlePropertyDetailChange('shopFrontage', e.target.value)}
+                  className="w-full max-w-md border rounded px-3 py-2"
+                  placeholder="Enter shop frontage in feet"
+                />
+              </div>
+            )}
+
+
+
+            {fieldsToShow.includes('openArea') && (
+              <div className="mt-4">
+                <Label className="block text-sm font-medium mb-1">Open Area (sq.ft)</Label>
+                <input
+                  type="text"
+                  value={propertyDetails.openArea}
+                  onChange={(e) => handlePropertyDetailChange('openArea', e.target.value)}
+                  className="w-full max-w-md border rounded px-3 py-2"
+                  placeholder="Enter open area"
+                />
+              </div>
+            )}
+
+            {fieldsToShow.includes('storageAvailable') && (
+              <div className="mt-4">
+                <Label className="block text-sm font-medium mb-1">Storage Available</Label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="storageAvailable"
+                    checked={propertyDetails.storageAvailable}
+                    onChange={(e) => handlePropertyDetailChange('storageAvailable', e.target.checked)}
+                  />
+                  <Label htmlFor="storageAvailable">Storage space available</Label>
+                </div>
+              </div>
+            )}
+
+            {fieldsToShow.includes('businessTransfer') && (
+              <div className="mt-4">
+                <Label className="block text-sm font-medium mb-1">Business Transfer</Label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="businessTransfer"
+                    checked={propertyDetails.businessTransfer}
+                    onChange={(e) => handlePropertyDetailChange('businessTransfer', e.target.checked)}
+                  />
+                  <Label htmlFor="businessTransfer">Existing business transfer included</Label>
+                </div>
+              </div>
+            )}
+
+            {fieldsToShow.includes('showWindow') && (
+              <div className="mt-4">
+                <Label className="block text-sm font-medium mb-1">Show Window</Label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="showWindow"
+                    checked={propertyDetails.showWindow}
+                    onChange={(e) => handlePropertyDetailChange('showWindow', e.target.checked)}
+                  />
+                  <Label htmlFor="showWindow">Show window available</Label>
+                </div>
+              </div>
+            )}
+
+            {fieldsToShow.includes('conferenceRooms') && (
+              <div className="mt-4">
+                <Label className="block text-sm font-medium mb-1">Conference Rooms</Label>
+                <input
+                  type="number"
+                  value={propertyDetails.conferenceRooms}
+                  onChange={(e) => handlePropertyDetailChange('conferenceRooms', parseInt(e.target.value) || 0)}
+                  className="w-full max-w-md border rounded px-3 py-2"
+                  placeholder="Number of conference rooms"
+                />
+              </div>
+            )}
+
+            {fieldsToShow.includes('workstations') && (
+              <div className="mt-4">
+                <Label className="block text-sm font-medium mb-1">Workstations Capacity</Label>
+                <input
+                  type="number"
+                  value={propertyDetails.workstations}
+                  onChange={(e) => handlePropertyDetailChange('workstations', parseInt(e.target.value) || 0)}
+                  className="w-full max-w-md border rounded px-3 py-2"
+                  placeholder="Number of workstations"
+                />
+              </div>
+            )}
+
+            {fieldsToShow.includes('pantryAvailable') && (
+              <div className="mt-4">
+                <Label className="block text-sm font-medium mb-1">Pantry Available</Label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="pantryAvailable"
+                    checked={propertyDetails.pantryAvailable}
+                    onChange={(e) => handlePropertyDetailChange('pantryAvailable', e.target.checked)}
+                  />
+                  <Label htmlFor="pantryAvailable">Pantry available</Label>
+                </div>
+              </div>
+            )}
+
+            {fieldsToShow.includes('leaseDuration') && (
+              <div className="mt-4">
+                <Label className="block text-sm font-medium mb-1">Lease Duration</Label>
+                <select
+                  value={propertyDetails.leaseDuration}
+                  onChange={(e) => handlePropertyDetailChange('leaseDuration', e.target.value)}
+                  className="w-full max-w-md border rounded px-3 py-2"
+                >
+                  <option value="" disabled>Select lease duration</option>
+                  <option value="6 months">6 months</option>
+                  <option value="1 year">1 year</option>
+                  <option value="2 years">2 years</option>
+                  <option value="3 years">3 years</option>
+                  <option value="5 years">5 years</option>
+                  <option value="5+ years">5+ years</option>
+                </select>
+              </div>
+            )}
+
+            {fieldsToShow.includes('rentEscalation') && (
+              <div className="mt-4">
+                <Label className="block text-sm font-medium mb-1">Rent Escalation Clause</Label>
+                <textarea
+                  value={propertyDetails.rentEscalation}
+                  onChange={(e) => handlePropertyDetailChange('rentEscalation', e.target.value)}
+                  className="w-full max-w-md border rounded px-3 py-2"
+                  placeholder="Describe rent escalation terms"
+                  rows={3}
+                />
+              </div>
+            )}
+
+            {fieldsToShow.includes('noticePeriod') && (
+              <div className="mt-4">
+                <Label className="block text-sm font-medium mb-1">Notice Period (months)</Label>
+                <input
+                  type="number"
+                  value={propertyDetails.noticePeriod}
+                  onChange={(e) => handlePropertyDetailChange('noticePeriod', e.target.value)}
+                  className="w-full max-w-md border rounded px-3 py-2"
+                  placeholder="Notice period in months"
+                />
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Residential Rent Specific Fields */}
+        {selectedType === 'Residential' && selectedAction === 'Rent' && (
+          <>
+            {fieldsToShow.includes('preferredTenants') && (
+              <div className="mt-4">
+                <Label className="block text-sm font-medium mb-1">Preferred Tenants</Label>
+                <div className="flex flex-wrap gap-4 mt-2">
+                  {['Family', 'Bachelors', 'Company', 'No Preference'].map((option) => (
+                    <label key={option} className="inline-flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={propertyDetails.preferredTenants?.includes(option) || false}
+                        onChange={(e) => {
+                          const currentSelection = propertyDetails.preferredTenants || [];
+                          let newSelection;
+                          
+                          if (e.target.checked) {
+                            if (option === "No Preference") {
+                              newSelection = [option];
+                            } else {
+                              newSelection = [...currentSelection.filter(item => item !== "No Preference"), option];
+                            }
+                          } else {
+                            newSelection = currentSelection.filter(item => item !== option);
+                          }
+                          
+                          handlePropertyDetailChange('preferredTenants', newSelection);
+                        }}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="ml-2 text-sm text-gray-700">{option}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {fieldsToShow.includes('lockInPeriod') && (
+              <div className="mt-4">
+                <Label className="block text-sm font-medium mb-1">Lock-in Period (months)</Label>
+                <input
+                  type="number"
+                  value={propertyDetails.lockInPeriod}
+                  onChange={(e) => handlePropertyDetailChange('lockInPeriod', e.target.value)}
+                  className="w-full max-w-md border rounded px-3 py-2"
+                  placeholder="Lock-in period in months"
+                />
+              </div>
+            )}
+          </>
+        )}
+
+        {/* PG Specific Fields */}
+        {/* {(selectedAction === 'PG' && fieldsToShow.includes('roomSharing')) && (
+          <div className="mt-6">
+            <Label className="block text-sm font-medium mb-2">Room Sharing</Label>
+            <div className="flex gap-2 flex-wrap">
+              {['Private', '2', '3','4','5+', 'Dormitory'].map(type => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => handlePropertyDetailChange('roomSharing', type)}
+                  className={`px-4 py-2 rounded border ${
+                    propertyDetails.roomSharing === type
+                      ? 'bg-blue-600 text-white'
+                      : 'border-gray-300 text-gray-600'
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+          </div>
+        )} */}
+
+        {/* Plot Details Section */}
+        {(fieldsToShow.includes('carpetArea') || fieldsToShow.includes('builtUpArea') || 
+         fieldsToShow.includes('superBuiltUpArea') || fieldsToShow.includes('plotArea')) && (
+          <div className="mt-3">
+            <div className="">
+              <Label className="text-xl font-medium text-gray-700">
+                Plot Details
+              </Label>
+              
+              {fieldsToShow.includes('carpetArea') && (
+                <div className="mt-4">
+                  <div className="relative flex items-center border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm shadow-sm overflow-hidden max-w-md">
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        value={propertyDetails.carpetArea}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, '');
+                          handlePropertyDetailChange('carpetArea', value);
+                        }}
+                        placeholder=" "
+                        className="peer w-full bg-transparent px-4 pt-6 pb-2 text-base appearance-none focus:outline-none placeholder-transparent"
+                      />
+                      <label className="absolute left-4 top-2 text-sm text-gray-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-600">
+                        Carpet Area
+                      </label>
+                    </div>
+                    <div className="h-10 w-px bg-gray-300"></div>
+                    <select
+                      value={propertyDetails.areaUnit}
+                      onChange={(e) => handlePropertyDetailChange('areaUnit', e.target.value)}
+                      className="px-4 py-2 bg-transparent focus:outline-none text-sm text-gray-700"
+                    >
+                      <option value="sq.ft.">sq.ft.</option>
+                      <option value="sq.m.">sq.m.</option>
+                      <option value="acres">acres</option>
+                      <option value="cent">cent</option>
+                      <option value="hectare">hectare</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              {fieldsToShow.includes('builtUpArea') && (
+                <div className="mt-4">
+                  <div className="relative max-w-md">
+                    <input
+                      type="text"
+                      value={propertyDetails.builtUpArea}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '');
+                        handlePropertyDetailChange('builtUpArea', value);
+                      }}
+                      placeholder=" "
+                      className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm focus:outline-none placeholder-transparent"
+                    />
+                    <label className="absolute left-4 top-2 text-sm text-gray-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-600">
+                      Built Up Area
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              {fieldsToShow.includes('superBuiltUpArea') && (
+                <div className="mt-4">
+                  <div className="relative max-w-md">
+                    <input
+                      type="text"
+                      value={propertyDetails.superBuiltUpArea}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '');
+                        handlePropertyDetailChange('superBuiltUpArea', value);
+                      }}
+                      placeholder=" "
+                      className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm focus:outline-none placeholder-transparent"
+                    />
+                    <label className="absolute left-4 top-2 text-sm text-gray-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-600">
+                      Super Built Up Area
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              {fieldsToShow.includes('plotArea') && (
+                <div className="mt-4">
+                  <div className="relative flex items-center border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm shadow-sm overflow-hidden">
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        value={propertyDetails.plotArea}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (/^\d*$/.test(val)) {
+                            handlePropertyDetailChange('plotArea', val);
+                          }
+                        }}
+                        placeholder=" "
+                        className="peer block w-full appearance-none bg-transparent px-4 pt-6 pb-2 text-base focus:outline-none placeholder-transparent"
+                      />
+                      <label className="absolute left-4 top-2 text-sm text-gray-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-600">
+                        Plot Area
+                      </label>
+                    </div>
+                    <div className="h-10 w-px bg-gray-300"></div>
+                    <select
+                      value={propertyDetails.plotUnit}
+                      onChange={(e) => handlePropertyDetailChange('plotUnit', e.target.value)}
+                      className="px-5 py-2 bg-transparent focus:outline-none text-sm text-gray-700"
+                    >
+                      <option value="Sq.ft">Sq.ft</option>
+                      <option value="Sq.yards">Sq.yards</option>
+                      <option value="Acres">Acres</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              {fieldsToShow.includes('roadWidth') && (
+                <div className="mt-4">
+                  <div className="relative flex items-center border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm shadow-sm overflow-hidden">
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        value={propertyDetails.roadWidth}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (/^\d*$/.test(val)) {
+                            handlePropertyDetailChange('roadWidth', val);
+                          }
+                        }}
+                        placeholder=" "
+                        className="peer block w-full appearance-none bg-transparent px-4 pt-6 pb-2 text-base focus:outline-none placeholder-transparent"
+                      />
+                      <label className="absolute left-4 top-2 text-sm text-gray-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-600">
+                        Road Width
+                      </label>
+                    </div>
+                    <div className="h-10 w-px bg-gray-300"></div>
+                    <select
+                      value={propertyDetails.roadWidthUnit}
+                      onChange={(e) => handlePropertyDetailChange('roadWidthUnit', e.target.value)}
+                      className="px-4 py-2 bg-transparent focus:outline-none text-sm text-gray-700"
+                    >
+                      <option value="feet">Feet</option>
+                      <option value="meter">Meter</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              {(fieldsToShow.includes('cornerPlot') || fieldsToShow.includes('gatedCommunity') || fieldsToShow.includes('allowSplit')) && (
+                <div className="flex flex-wrap gap-x-12 mt-4 ml-2">
+                  {fieldsToShow.includes('allowSplit') && (
+                    <div className="">
+                      <div>
+                        <label className="text-sm font-medium mb-2 text-gray-700">Allow Land Split?</label>
+                        <div className="flex items-center gap-6">
+                          {['Yes', 'No'].map((option) => (
+                            <label key={option} className="flex items-center gap-2 text-sm text-gray-600">
+                              <input
+                                type="radio"
+                                name="allowSplit"
+                                value={option}
+                                checked={propertyDetails.allowSplit === option}
+                                onChange={(e) => handlePropertyDetailChange('allowSplit', e.target.value)}
+                                className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                              />
+                              {option}
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+
+                      {propertyDetails.allowSplit === 'Yes' && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div className="relative">
+                            <input
+                              type="tel"
+                              value={propertyDetails.totalLandArea || ''}
+                              onChange={(e) => handlePropertyDetailChange('totalLandArea', e.target.value)}
+                              placeholder=" "
+                              className="peer block w-full border border-gray-300 rounded px-4 pt-6 pb-2 placeholder-transparent focus:outline-none focus:border-blue-600"
+                            />
+                            <label className="absolute left-4 top-2 text-sm text-gray-500 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-sm transition-all">
+                              Total Land Area (in cents)
+                            </label>
+                          </div>
+
+                          <div className="relative">
+                            <input
+                              type="tel"
+                              value={propertyDetails.splitCount || ''}
+                              onChange={(e) => handlePropertyDetailChange('splitCount', e.target.value)}
+                              placeholder=" "
+                              className="peer block w-full border border-gray-300 rounded px-4 pt-6 pb-2 placeholder-transparent focus:outline-none focus:border-blue-600"
+                            />
+                            <label className="absolute left-4 top-2 text-sm text-gray-500 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-sm transition-all">
+                              Number of Splits
+                            </label>
+                          </div>
+
+                          <div className="relative">
+                            <input
+                              type="tel"
+                              value={propertyDetails.eachSplitArea || ''}
+                              onChange={(e) => handlePropertyDetailChange('eachSplitArea', e.target.value)}
+                              placeholder=" "
+                              className="peer block w-full border border-gray-300 rounded px-4 pt-6 pb-2 placeholder-transparent focus:outline-none focus:border-blue-600"
+                            />
+                            <label className="absolute left-4 top-2 text-sm text-gray-500 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-sm transition-all">
+                              Area per Split (in cents)
+                            </label>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                    
+                  {fieldsToShow.includes('cornerPlot') && (
+                    <div className="flex flex-col">
+                      <label className="block text-sm font-medium mb-2 text-gray-700">Corner Plot</label>
+                      <div className="flex items-center space-x-4">
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="cornerPlot"
+                            value="Yes"
+                            checked={propertyDetails.cornerPlot === 'Yes'}
+                            onChange={(e) => handlePropertyDetailChange('cornerPlot', e.target.value)}
+                            className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                          />
+                          <span className="ml-2 text-sm text-gray-600">Yes</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="cornerPlot"
+                            value="No"
+                            checked={propertyDetails.cornerPlot === 'No'}
+                            onChange={(e) => handlePropertyDetailChange('cornerPlot', e.target.value)}
+                            className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                          />
+                          <span className="ml-2 text-sm text-gray-600">No</span>
+                        </label>
+                      </div>
+                    </div>
+                  )}              
+
+                  {fieldsToShow.includes('gatedCommunity') && (
+                    <div className="flex flex-col">
+                      <label className="block text-sm font-medium mb-2 text-gray-700">Gated Community</label>
+                      <div className="flex items-center space-x-4">
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="gatedCommunity"
+                            value="Yes"
+                            checked={propertyDetails.gatedCommunity === 'Yes'}
+                            onChange={(e) => handlePropertyDetailChange('gatedCommunity', e.target.value)}
+                            className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                          />
+                          <span className="ml-2 text-sm text-gray-600">Yes</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="gatedCommunity"
+                            value="No"
+                            checked={propertyDetails.gatedCommunity === 'No'}
+                            onChange={(e) => handlePropertyDetailChange('gatedCommunity', e.target.value)}
+                            className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                          />
+                          <span className="ml-2 text-sm text-gray-600">No</span>
+                        </label>
+                      </div>
+                    </div>
+                  )}
+
+                  {fieldsToShow.includes('facing') && (
+                    <div className="mt-4">
+                      <Label className="block text-sm font-medium mb-1">Facing</Label>
+                      <div className="flex gap-4 flex-wrap">
+                        {['North', 'South', 'East', 'West', 'North-East', 'North-West', 'South-East', 'South-West'].map(direction => (
+                          <button
+                            key={direction}
+                            type="button"
+                            onClick={() => handlePropertyDetailChange('facing', direction)}
+                            className={`px-3 py-1 rounded border text-sm font-medium ${
+                              propertyDetails.facing === direction
+                                ? 'bg-blue-600 text-white'
+                                : 'border-gray-300 text-gray-600'
+                            }`}
+                          >
+                            {direction}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div className='mt-3'>
+                    <Label className="text-xl font-medium text-gray-700 mt-3">
+                      Legal Details
+                    </Label>
+
+                    {fieldsToShow.includes('ownershipType') && (
+                      <div id="ownership-field" className="mt-4">
+                        <h2 className="text-sm font-medium mb-2 flex items-center gap-2 text-gray-700">
+                          Ownership Type
+                          <span className="group relative text-gray-500 cursor-pointer">
+                            <BsPatchQuestionFill className="text-lg" />
+                            <div className="absolute top-6 left-4 z-50 w-80 p-4 bg-white border border-gray-300 rounded-md shadow-md text-sm text-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                              <h3 className="font-semibold mb-2">Types of Ownerships</h3>
+                              <p className="mb-1"><strong>Freehold:</strong> Full and unconditional ownership.</p>
+                              <p className="mb-1"><strong>Leasehold:</strong> Ownership for a fixed term (usually 90-99 years).</p>
+                              <p className="mb-1"><strong>Co-operative society:</strong> Group-based legal co-ownership.</p>
+                              <p><strong>Power of Attorney:</strong> Legal authority to act on behalf of the owner.</p>
+                            </div>
+                          </span>
+                        </h2>
+
+                        <div className="flex flex-wrap gap-2">
+                          {['Freehold', 'Leasehold', 'Co-operative society', 'Power of Attorney'].map((option) => (
+                            <button
+                              key={option}
+                              type="button"
+                              onClick={() => handlePropertyDetailChange('ownershipType', option)}
+                              className={`px-4 py-1 rounded border transition ${
+                                propertyDetails.ownershipType === option
+                                  ? 'bg-blue-600 text-white border-blue-600'
+                                  : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+                              }`}
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Property Approval Field */}
+                    {fieldsToShow.includes('propertyApproval') && (
+                      <div id="property-approval-field" className="mt-4">
+                        <h2 className="text-sm font-medium mb-2 text-gray-700">Property Approval</h2>
+                        <div className="flex flex-wrap gap-2">
+                          {['Panchayat', 'CMDA', 'DTCP', 'Other'].map((option) => (
+                            <button
+                              key={option}
+                              type="button"
+                              onClick={() => handlePropertyDetailChange('propertyApproval', option)}
+                              className={`px-4 py-1 rounded-sm border text-sm transition ${
+                                propertyDetails.propertyApproval === option
+                                  ? 'bg-blue-600 text-white border-blue-600'
+                                  : 'bg-white text-gray-700 border-gray-300'
+                              }`}
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Land Use Zone Field */}
+                    {fieldsToShow.includes('landUseZone') && (
+                      <div id="land-use-zone-field" className="mt-4">
+                        <h2 className="text-sm font-medium mb-2 text-gray-700">Land Use Zone</h2>
+                        <div className="flex flex-wrap gap-2">
+                          {['Residential', 'Agricultural', 'Commercial', 'Industrial'].map((option) => (
+                            <button
+                              key={option}
+                              type="button"
+                              onClick={() => handlePropertyDetailChange('landUseZone', option)}
+                              className={`px-4 py-1 rounded border text-sm transition ${
+                                propertyDetails.landUseZone === option
+                                  ? 'bg-blue-600 text-white border-blue-600'
+                                  : 'bg-white text-gray-700 border-gray-300'
+                              }`}
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>            
+                </div>                
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Sell specific fields */}
+        {selectedAction === 'Sell' && fieldsToShow.includes('expectedPrice') && (
+          <div className="mt-4">
+            <Label className="block text-sm font-medium mb-1">Expected Price (₹)</Label>
+            <input
+              type="text"
+              value={propertyDetails.expectedPrice}
+              onChange={(e) => handlePropertyDetailChange('expectedPrice', e.target.value)}
+              className="w-full max-w-md border rounded px-3 py-2"
+              placeholder="Enter expected price"
+            />
+          </div>
+        )}
+
+        {/* Furnishing */}
+        {fieldsToShow.includes("furnishing") && (
+          <div className="mt-4">
+            <label className="block text-sm font-medium mb-2">Furnishing</label>
+            <div className="flex gap-2 flex-wrap">
+              {["Furnished", "Semi-furnished", "Unfurnished"].map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => handlePropertyDetailChange("furnishing", option)}
+                  className={`px-4 py-2 rounded-md text-sm font-semibold border transition-all duration-300 ease-in-out ${
+                    propertyDetails.furnishing === option
+                      ? "bg-blue-600 text-white border-blue-600"
+                      : "border-gray-300 text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Amenities */}
+        {fieldsToShow.includes('amenities') && (
+          <>
+            <div
+              onClick={() => setShowAmenitiesFlat(true)}
+              className="mt-4 text-sm font-medium text-blue-600 hover:underline cursor-pointer flex items-center"
+            >
+              + Add Furnishings / Amenities
+            </div>
+
+            {propertyDetails.amenities?.length > 0 && (
+              <div className="mt-4">
+                <div className="flex flex-wrap gap-2 items-center">
+                  {(showAllAmenities ? propertyDetails.amenities : propertyDetails.amenities.slice(0, 3)).map((amenity) => (
+                    <span
+                      key={amenity}
+                      className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium flex items-center"
+                    >
+                      {amenity}
+                    </span>
+                  ))}
+                  
+                  {propertyDetails.amenities.length > 3 && (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setShowAllAmenities(!showAllAmenities);
+                      }}
+                      className="text-blue-600 hover:underline text-xs font-medium px-2 py-1 whitespace-nowrap"
+                    >
+                      {showAllAmenities ? 'Show less' : `+${propertyDetails.amenities.length - 3} more`}
+                    </button>
+                  )}
+                  
+                  {showAllAmenities && propertyDetails.amenities.length > 0 && (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handlePropertyDetailChange('amenities', []);
+                      }}
+                      className="text-red-600 hover:underline text-xs font-medium px-2 py-1 whitespace-nowrap"
+                    >
+                      Clear All
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {showAmenitiesFlat && (
+              <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center p-4">
+                <div className="bg-white rounded-sm p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative shadow-lg">
+                  <button
+                    onClick={() => setShowAmenitiesFlat(false)}
+                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl"
+                  >
+                    &times;
+                  </button>
+
+                  <h3 className="text-xl font-semibold mb-6 text-center text-gray-800">
+                    Add Furnishings and Amenities
+                  </h3>
+
+                  <div className="space-y-8">
+                    {amenitiesCategories.map((category) => (
+                      <div key={category.title}>
+                        <h4 className="text-lg font-medium mb-4 text-gray-700">
+                          {category.title}
+                        </h4>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                          {category.items.map((item) => (
+                            <div
+                              key={item.label}
+                              onClick={() => toggleAmenity(item.label)}
+                              className={`border rounded-lg p-3 flex flex-col items-center justify-center cursor-pointer text-center transition-all duration-200 ${
+                                selectedAmenities.includes(item.label)
+                                  ? "bg-blue-50 border-blue-500 text-blue-700"
+                                  : "border-gray-200 hover:bg-gray-50"
+                              }`}
+                            >
+                              <span className="mb-2">{item.icon}</span>
+                              <span className="text-xs font-light">{item.label}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-8 flex justify-center">
+                    <button
+                      onClick={handleSaveAmenities}
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-8 rounded-lg shadow transition-all"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Parking */}
+        {(fieldsToShow.includes('coveredParking') || fieldsToShow.includes('openParking')) && (
+          <div className="mt-4">
+            <Label className="block text-sm font-medium mb-1">Reserved Parking</Label>
+            <div className="flex items-center gap-6 flex-wrap">
+              {fieldsToShow.includes('coveredParking') && (
+                <div className="flex items-center gap-2">
+                  <span>Covered Parking</span>
+                  <button
+                    type="button"
+                    onClick={() => handlePropertyDetailChange('coveredParking', Math.max(0, propertyDetails.coveredParking - 1))}
+                    disabled={propertyDetails.coveredParking === 0}
+                    className={`w-8 h-8 rounded-full border text-lg ${
+                      propertyDetails.coveredParking === 0 ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    −
+                  </button>
+                  <span>{propertyDetails.coveredParking}</span>
+                  <button
+                    type="button"
+                    onClick={() => handlePropertyDetailChange('coveredParking', propertyDetails.coveredParking + 1)}
+                    className="w-8 h-8 rounded-full border text-lg"
+                  >
+                    +
+                  </button>
+                </div>
+              )}
+
+              {fieldsToShow.includes('openParking') && (
+                <div className="flex items-center gap-2">
+                  <span>Open Parking</span>
+                  <button
+                    type="button"
+                    onClick={() => handlePropertyDetailChange('openParking', Math.max(0, propertyDetails.openParking - 1))}
+                    disabled={propertyDetails.openParking === 0}
+                    className={`w-8 h-8 rounded-full border text-lg ${
+                      propertyDetails.openParking === 0 ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    −
+                  </button>
+                  <span>{propertyDetails.openParking}</span>
+                  <button
+                    type="button"
+                    onClick={() => handlePropertyDetailChange('openParking', propertyDetails.openParking + 1)}
+                    className="w-8 h-8 rounded-full border text-lg"
+                  >
+                    +
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Floor Details */}
+        {(fieldsToShow.includes('totalFloors') || fieldsToShow.includes('floorNumber')) && (
+          <div className="mt-6">
+            <Label className="block text-lg font-semibold text-gray-800 mb-3">Floor Details</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {fieldsToShow.includes('totalFloors') && (
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="total-floors-field"
+                    inputMode="numeric"
+                    value={propertyDetails.totalFloors}
+                    onChange={e => handlePropertyFloorDetailChange('totalFloors', e.target.value)}
+                    placeholder=" "
+                    className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm transition-all focus:border-blue-600 focus:outline-none placeholder-transparent"
+                  />
+                  <label
+                    htmlFor="total-floors-field"
+                    className="absolute left-3 top-2 text-sm text-gray-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-600"
+                  >
+                    Total Floors
+                  </label>
+                </div>
+              )}
+
+              {fieldsToShow.includes('floorNumber') && (
+                <div className="relative">
+                  <select
+                    id="floor-number"
+                    value={propertyDetails.floorNumber}
+                    onChange={e => handlePropertyDetailChange('floorNumber', e.target.value)}
+                    className="peer block w-full appearance-none rounded-md border border-gray-300 bg-white/60 px-4 pt-6 pb-2 text-base text-black shadow-sm backdrop-blur-md focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-transparent"
+                  >
+                    <option value="" disabled hidden></option>
+                    {propertyDetails.floorOptions.map((floor, index) => (
+                      <option key={index} value={floor}>
+                        {floor}
+                      </option>
+                    ))}
+                  </select>
+                  <label
+                    htmlFor="floor-number"
+                    className="absolute left-4 top-2 text-sm text-gray-500 transition-all duration-200 
+                              peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 
+                              peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-600"
+                  >
+                    Select Floor
+                  </label>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Availability Status */}
+        {fieldsToShow.includes('availability') && (
+          <div className="mt-4">
+            <Label className="block text-sm font-medium mb-1">Availability</Label>
+
+            {selectedAction === 'Rent' && (
+              <div className="flex gap-3 flex-wrap">
+                {['Immediate', 'Within 15 Days', 'Next Month', 'Choose Date'].map(option => (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => handlePropertyDetailChange('availability', option)}
+                    className={`px-4 py-2 rounded border ${
+                      propertyDetails.availability === option
+                        ? 'bg-blue-600 text-white'
+                        : 'border-gray-300 text-gray-600'
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {selectedAction === 'Rent' && propertyDetails.availability === 'Choose Date' && (
+              <input
+                type="date"
+                className="mt-3 border rounded px-3 py-2"
+                value={propertyDetails.availabilityDate || ''}
+                onChange={(e) => handlePropertyDetailChange('availabilityDate', e.target.value)}
+              />
+            )}
+
+            {selectedAction === 'Sell' && (
+              <>
+                <div className="flex gap-4 mt-2">
+                  {['Ready to move', 'Under construction'].map(status => (
+                    <button
+                      key={status}
+                      type="button"
+                      onClick={() => {
+                        handlePropertyDetailChange('availability', status);
+                        if (status === "Ready to move") {
+                          handlePropertyDetailChange('possessionBy', "");
+                        } else {
+                          handlePropertyDetailChange('propertyAge', "");
+                        }
+                      }}
+                      className={`px-4 py-2 rounded border ${
+                        propertyDetails.availability === status
+                          ? 'bg-blue-600 text-white'
+                          : 'border-gray-300 text-gray-600'
+                      }`}
+                    >
+                      {status}
+                    </button>
+                  ))}
+                </div>
+
+                {propertyDetails.availability === "Ready to move" && fieldsToShow.includes('propertyAge') && (
+                  <div className="mt-4">
+                    <Label className="block text-sm font-medium mb-1">Age of Property</Label>
+                    <div className="flex gap-3 flex-wrap">
+                      {['0-1 years', '1-5 years', '5-10 years', '10+ years'].map(age => (
+                        <button
+                          key={age}
+                          type="button"
+                          onClick={() => handlePropertyDetailChange('propertyAge', age)}
+                          className={`px-4 py-1 rounded border ${
+                            propertyDetails.propertyAge === age
+                              ? 'bg-blue-600 text-white'
+                              : 'border-gray-300 text-gray-600'
+                          }`}
+                        >
+                          {age}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {propertyDetails.availability === "Under construction" && fieldsToShow.includes('possessionBy') && (
+                  <div className="mt-4 space-y-4">
+                    <div>
+                      <Label className="block text-sm font-medium mb-1">Possession By</Label>
+                      <select
+                        className="w-[300px] border rounded px-4 py-2 text-gray-700 border-gray-300"
+                        value={propertyDetails.possessionBy}
+                        onChange={(e) => handlePropertyDetailChange('possessionBy', e.target.value)}
+                      >
+                        <option value="" disabled>Expected by</option>
+                        <option value="3months">Within 3 months</option>
+                        <option value="6months">Within 6 months</option>
+                        <option value="custom">Choose specific date</option>
+                        {Array.from({ length: 6 }, (_, i) => {
+                          const year = new Date().getFullYear() + i;
+                          return <option key={year} value={year}>{year}</option>;
+                        })}
+                      </select>
+                    </div>
+
+                    {propertyDetails.possessionBy === "custom" && (
+                      <div>
+                        <Label className="block text-sm font-medium mb-1">Select Date</Label>
+                        <input
+                          type="date"
+                          className="w-[300px] border rounded px-4 py-2 text-gray-700 border-gray-300"
+                          value={propertyDetails.possessionDate || ''}
+                          min={new Date().toISOString().split('T')[0]}
+                          onChange={(e) => handlePropertyDetailChange('possessionDate', e.target.value)}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderDynamicFieldsStep5 = () => {
+    const pricingFieldsToShow = getPricingFieldsToShow();
+
+    return (
+      <div className="space-y-4 text-gray-800 relative">
+        <h2 className="text-lg font-semibold mt-2 ">Price Details</h2>
+        
+        {/* Ownership */}
+        {selectedAction === 'Sell' && ['Flat/Apartment', 'Independent House / Villa', 'Independent / Builder Floor'].includes(selectedSubtype) && (
+          <div id="ownership-field">
+            <h2 className="text-lg font-semibold mb-2 flex items-center gap-2 relative">
+              Ownership
+              <span
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                className="text-gray-400 cursor-pointer relative"
+              >
+                <BsPatchQuestionFill className="text-lg" />
+                {isHovered && (
+                  <div className="absolute z-50 w-80 p-4 bg-white border border-gray-300 rounded-md shadow-md text-sm top-6 left-4">
+                    <h3 className="font-semibold mb-2">Types of Ownerships</h3>
+                    <p><strong>Freehold:</strong> Full and unconditional ownership.</p>
+                    <p><strong>Leasehold:</strong> Partial ownership for a fixed term (90–99 years).</p>
+                    <p><strong>Co-operative society:</strong> Group-based legal co-ownership.</p>
+                    <p><strong>Power of Attorney:</strong> Legal authority to act on owner's behalf.</p>
+                  </div>
+                )}
+              </span>
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {['Freehold', 'Leasehold', 'Co-operative society', 'Power of Attorney'].map(option => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => handlePricingChange('ownership', option)}
+                  className={`px-4 py-1 rounded border transition ${
+                    pricing.ownership === option ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {/* Price Details */}
+        <div id="price-details-field">
+          {/* For Rent and lease properties */}
+          {(selectedAction === 'Rent' || selectedAction === 'PG') && (
+            <div id="price-details-field" className="space-y-4">
+              {/* Monthly Rent / Lease Amount */}
+              <div>
+                <Label className="block text-sm font-medium mb-1">
+                  {pricing.lease ? 'Lease Amount (₹)' : 'Monthly Rent (₹)'}
+                </Label>
+                <input
+                  type="tel"
+                  value={propertyDetails.monthlyRent}
+                  onChange={(e) => handlePropertyDetailChange('monthlyRent', e.target.value)}
+                  className="w-full max-w-md border rounded px-3 py-2"
+                  placeholder={pricing.lease ? 'Enter lease amount' : 'Enter monthly rent'}
+                />
+              </div>
+
+              {/* Lease Toggle */}
+              {pricingFieldsToShow.includes('lease') && (
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={pricing.lease}
+                    onChange={(e) => handlePricingChange('lease', e.target.checked)}
+                  />
+                  It's a Lease
+                </label>
+              )}
+
+              {/* Lease-Specific Fields */}
+              {pricing.lease && (
+                <div className="space-y-4 border rounded-lg p-4 bg-gray-50">
+                  <div>
+                    <Label className="block text-sm font-medium mb-1">Lease Duration</Label>
+                    <select
+                      value={pricing.leaseDuration || ''}
+                      onChange={(e) => handlePricingChange('leaseDuration', e.target.value)}
+                      className="w-full max-w-md border rounded px-3 py-2"
+                    >
+                      <option value="">Select lease duration</option>
+                      <option value="6 months">6 months</option>
+                      <option value="1 year">1 year</option>
+                      <option value="2 years">2 years</option>
+                      <option value="3 years">3 years</option>
+                      <option value="5 years">5 years</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              {/* Regular Deposit */}
+              {!pricing.lease && pricingFieldsToShow.includes('deposit') && (
+                <div>
+                  <Label className="block text-sm font-medium mb-1">Deposit (₹)</Label>
+                  <input
+                    type="tel"
+                    value={propertyDetails.deposit}
+                    onChange={(e) => handlePropertyDetailChange('deposit', e.target.value)}
+                    className="w-full max-w-md border rounded px-3 py-2"
+                    placeholder="Enter deposit amount"
+                  />
+                </div>
+              )}
+
+              {/* Price Negotiable */}
+              {pricingFieldsToShow.includes('priceNegotiable') && (
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={pricing.priceNegotiable}
+                    onChange={(e) => handlePricingChange('priceNegotiable', e.target.checked)}
+                  />
+                  Price Negotiable
+                </label>
+              )}
+              
+              {/* Additional Charges */}
+              {pricingFieldsToShow.includes('additionalCharges') && (
+                <div className="mt-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowAdditionalCharges(!showAdditionalCharges)}
+                    className="text-blue-600 hover:underline flex items-center gap-1 mb-2"
+                  >
+                    {showAdditionalCharges ? (
+                      <>
+                        <span>-</span> Hide Additional Charges
+                      </>
+                    ) : (
+                      <>
+                        <span>+</span> Additional Charges
+                      </>
+                    )}
+                  </button>
+
+                  {showAdditionalCharges && (
+                    <div className="space-y-4 border rounded-lg p-4">
+                      <div key="Monthly Charges" className="space-y-2">
+                        <h4 className="font-medium text-gray-700">Monthly Charges</h4>
+                        {['Maintenance', 'Water'].map((chargeName) => {
+                          return (
+                            <div key={chargeName} className="flex flex-col gap-1">
+                              <label className="flex items-center gap-2">
+                                <input
+                                  type="checkbox"
+                                  checked={pricing.additionalCharges?.some(c => c.name === chargeName)}
+                                  onChange={(e) => {
+                                    const newCharges = [...(pricing.additionalCharges || [])];
+                                    if (e.target.checked) {
+                                      newCharges.push({name: chargeName, amount: ''});
+                                    } else {
+                                      const index = newCharges.findIndex(c => c.name === chargeName);
+                                      if (index !== -1) newCharges.splice(index, 1);
+                                    }
+                                    handlePricingChange('additionalCharges', newCharges);
+                                  }}
+                                />
+                                {chargeName}
+                              </label>
+                              {pricing.additionalCharges?.some(c => c.name === chargeName) && (
+                                <input
+                                  type="x`"
+                                  placeholder="Amount"
+                                  value={pricing.additionalCharges.find(c => c.name === chargeName)?.amount || ''}
+                                  onChange={(e) => {
+                                    const newCharges = [...(pricing.additionalCharges || [])];
+                                    const chargeIndex = newCharges.findIndex(c => c.name === chargeName);
+                                    if (chargeIndex !== -1) {
+                                      newCharges[chargeIndex].amount = e.target.value;
+                                      handlePricingChange('additionalCharges', newCharges);
+                                    }
+                                  }}
+                                  className="ml-6 border rounded px-2 py-1 text-sm w-24"
+                                />
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Selected Charges Display */}
+              {pricing.additionalCharges?.length > 0 && (
+                <div className="mt-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-sm font-medium text-gray-700">Selected Additional Charges:</p>
+                    <span className="text-xs text-gray-500">
+                      {pricing.additionalCharges.length} selected
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {pricing.additionalCharges.map(charge => (
+                      <div 
+                        key={charge.name} 
+                        className="relative bg-blue-50 text-blue-800 px-3 py-1.5 rounded-full text-sm flex items-center"
+                      >
+                        {charge.name}
+                        {charge.amount && ` (₹${charge.amount})`}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handlePricingChange(
+                              'additionalCharges', 
+                              pricing.additionalCharges.filter(c => c.name !== charge.name)
+                            );
+                          }}
+                          className="ml-2 text-blue-600 hover:text-blue-800"
+                        >
+                          <MdClose className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* For Sell properties */}
+          {selectedAction === 'Sell' && pricingFieldsToShow.includes('expectedPrice') && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              {/* Expected Price */}
+              <div className="relative">
+                <input
+                  type="text"
+                  id="expected-price-field"
+                  inputMode="numeric"
+                  value={pricing.expectedPrice}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    handlePricingChange('expectedPrice', val);
+                  }}
+                  placeholder=" "
+                  className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm transition-all focus:border-blue-600 focus:outline-none placeholder-transparent"
+                />
+                <label
+                  htmlFor="expected-price-field"
+                  className="absolute left-3 top-2 text-sm text-gray-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-600"
+                >
+                  ₹ Expected Price
+                </label>
+              </div>
+
+              {/* Price per Sq.Ft. */}
+              {pricingFieldsToShow.includes('pricePerSqft') && (
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="price-per-sqft-field"
+                    inputMode="numeric"
+                    value={pricing.pricePerSqft}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '');
+                      handlePricingChange('pricePerSqft', val);
+                    }}
+                    placeholder=" "
+                    className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm transition-all focus:border-blue-600 focus:outline-none placeholder-transparent"
+                  />
+                  <label
+                    htmlFor="price-per-sqft-field"
+                    className="absolute left-3 top-2 text-sm text-gray-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-600"
+                  >
+                    ₹ Price per sq.ft.
+                  </label>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* For Commercial Rent properties */}
+          {selectedType === 'Commercial' && selectedAction === 'Rent' && pricingFieldsToShow.includes('leaseDuration') && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              {pricingFieldsToShow.includes('leaseDuration') && (
+                <select
+                  value={pricing.leaseDuration}
+                  onChange={(e) => handlePricingChange('leaseDuration', e.target.value)}
+                  className="border rounded-md px-3 py-2 w-full"
+                >
+                  <option value="">Select Lease Duration</option>
+                  <option value="6 months">6 months</option>
+                  <option value="1 year">1 year</option>
+                  <option value="2 years">2 years</option>
+                  <option value="3 years">3 years</option>
+                  <option value="5 years">5 years</option>
+                  <option value="5+ years">5+ years</option>
+                </select>
+              )}
+
+              {pricingFieldsToShow.includes('noticePeriod') && (
+                <input
+                  type="number"
+                  placeholder="Notice Period (months)"
+                  value={pricing.noticePeriod}
+                  onChange={(e) => handlePricingChange('noticePeriod', e.target.value)}
+                  className="border rounded-md px-3 py-2 w-full"
+                />
+              )}
+
+              {pricingFieldsToShow.includes('rentEscalation') && (
+                <input
+                  type="text"
+                  placeholder="Rent Escalation (%)"
+                  value={pricing.rentEscalation}
+                  onChange={(e) => handlePricingChange('rentEscalation', e.target.value)}
+                  className="border rounded-md px-3 py-2 w-full"
+                />
+              )}
+            </div>
+          )}
+
+          {/* Price options checkboxes */}
+          <div className="mt-4 flex flex-col gap-2 text-sm">
+            {pricingFieldsToShow.includes('allInclusive') && (
+              <label className="flex items-center gap-2  relative">
+                <input
+                  type="checkbox"
+                  checked={pricing.allInclusive}
+                  onChange={(e) => handlePricingChange('allInclusive', e.target.checked)}
+                />
+                All inclusive price
+                <span className="group text-gray-400 cursor-pointer">
+                  <BsPatchQuestionFill />
+                  <div className="absolute right-10 top-4 z-50 w-80 p-4 bg-white border border-gray-300 rounded-md shadow-lg text-sm text-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
+                    <h3 className="font-semibold mb-2">All Inclusive Price</h3>
+                    <p>Includes:</p>
+                    <ul className="list-disc list-inside space-y-1 pl-2">
+                      <li>Base Price</li>
+                      <li>PLC Charges</li>
+                      <li>Parking</li>
+                      <li>EDC/IDC</li>
+                      <li>Lease Rent</li>
+                      <li>Maintenance</li>
+                      <li>Infrastructure fees</li>
+                      <li>Amenities</li>
+                      <li>Club Membership</li>
+                      <li>Power Back-up</li>
+                    </ul>
+                  </div>
+                </span>
+              </label>
+            )}
+
+            {pricingFieldsToShow.includes('taxExcluded') && (
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={pricing.taxExcluded}
+                  onChange={(e) => handlePricingChange('taxExcluded', e.target.checked)}
+                />
+                Tax and Govt. charges excluded
+              </label>
+            )}
+          </div>
+        </div>
+
+        {/* Brokerage */}
+        {(selectedAction !== 'PG' && pricingFieldsToShow.includes('brokerage')) && (
+          <div id="brokerage-field">
+            <h2 className="text-lg font-semibold mb-2">Do you charge brokerage?</h2>
+            <div className="flex items-center gap-6">
+              {['Yes', 'No'].map(option => (
+                <label key={option} className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    value={option}
+                    checked={pricing.brokerage === option}
+                    onChange={(e) => handlePricingChange('brokerage', e.target.value)}
+                  />
+                  {option}
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Property Description */}
+        <div id="description-field">
+          <h2 className="text-lg font-semibold mb-1">What makes your property unique</h2>
+          <p className="text-sm text-gray-500 mb-2">Adding description will increase your listing visibility</p>
+          <textarea
+            className="resize-none w-full border rounded-md p-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 border-gray-300 focus:ring-blue-500"
+            rows={5}
+            placeholder="Share some details about your property like spacious rooms, well maintained facilities..."
+            value={pricing.propertyDescription}
+            onChange={(e) => {
+              const val = e.target.value;
+              if (val.length <= 5000) handlePricingChange('propertyDescription', val);
+            }}
+          />
+          <div className="flex justify-between mt-1 text-sm">
+            <span className="text-gray-500">
+              {pricing.propertyDescription.trim().length >= 30
+                ? "Looks good!"
+                : "Minimum 30 characters recommended"}
+            </span>
+            <span className="text-gray-500">
+              {pricing.propertyDescription.trim().length} characters / 5000 max
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Main render
   return (
     <div className="main">
       <div className="max-w-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-10 px-4">
@@ -454,15 +2138,16 @@ const PostProperty = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-[620px]">
               {/* Left Fixed Section */}
               <div className="bg-blue-600 p-8 text-white h-full">
-                <h2 className="text-3xl font-bold mb-6">List Your Property in 3 Simple Steps</h2>
+                <h2 className="text-3xl font-bold mb-6">List Your Property in 7 Simple Steps</h2>
                 <div className="space-y-6">
                   {[
-                    { title: "Location Details", desc: "Tell us about your property type and location" },
-                    { title: "Property Details", desc: "Share specifications and amenities" },
-                    { title: "Property Profile", desc: "Ur Amenties" },
-                    { title: "Photos, Videos", desc: "high-quality images to attract buyers" },
-                    { title: "Pricing & Others", desc: "Pricing" },
-                    { title: "Admin Apporoval", desc: "Our team will verify and publish your listing" },
+                    { title: "Property Basics", desc: "Select property type and category" },
+                    { title: "Location Details", desc: "Enter property address and features" },
+                    { title: "Photos & Videos", desc: "Upload property images and videos" },
+                    { title: "Property Details", desc: "Specify rooms, area, and amenities" },
+                    { title: "Pricing and Details",desc: "Set your asking price and terms" },
+                    { title: "Your Details", desc: "Provide your company information" },
+                    { title: "Review & Submit", desc: "Verify all details before submission" },
                   ].map((s, idx) => (
                     <div key={idx} className="flex items-start space-x-4 group">
                       <div className="flex-shrink-0 mt-1">
@@ -505,628 +2190,114 @@ const PostProperty = () => {
                     <CardHeader>
                       <CardTitle className="text-2xl font-bold text-gray-800">
                         {step === 1 && 'Start Listing Your Property'}
-                        {step === 2 && 'Enter Property Details'}
-                        {step === 3 && 'Property Profile'}
-                        {step === 4 && 'Photos, Videos'}
-                        {step === 5 && 'Pricing & Others'}
+                        {step === 2 && 'Enter Property Details'}                        
+                        {step === 3 && 'Photos & Videos'}
+                        {step === 4 && 'Property Profile'}
+                        {step === 5 && 'Pricing'}
                         {step === 6 && 'Your Profile'}
+                        {step === 7 && 'Review Your Listing'}
                       </CardTitle>
                     </CardHeader>
 
                     <CardContent className="flex-grow">
                       <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Step 1 - Property Basics */}
                         {step === 1 && (
                           <>
                             <div className="space-y-2">
                               <Label className="text-base font-light">You're looking to...</Label>
                               <div className="flex gap-2">
-                                {['Sell', 'Rent', 'PG'].map(action => (
+                                {['Sell', 'Rent'].map(action => (
                                   <Button
                                     key={action}
                                     type="button"
                                     variant={selectedAction === action ? "default" : "outline"}
                                     size="sm"
-                                    className={`w-20 rounded ${selectedAction === action ? 'bg-blue-600 text-white' : ''} ${step1Errors.action ? 'border-red-500' : ''}`}
-                                    onClick={() => {
-                                      setSelectedAction(action);
-                                      if (step1Errors.action) {
-                                        setStep1Errors(prev => ({ ...prev, action: false }));
-                                      }
-                                    }}
+                                    className={`w-20 rounded ${selectedAction === action ? 'bg-blue-600 text-white' : ''}`}
+                                    onClick={() => setSelectedAction(action)}
                                   >
                                     {action}
                                   </Button>
                                 ))}
                               </div>
-                              {step1Errors.action && <p className="text-sm text-red-500">Please select an action</p>}
                             </div>
 
                             <div className="space-y-2">
-                              <Label className="text-base font-light">You're Looking for...</Label>
+                              <Label className="text-base font-light">Property Type</Label>
                               <div className="flex flex-wrap gap-2">
-                                {['Residential', 'Commercial'].map(type => (
-                                  <Button
-                                    key={type}
-                                    type="button"
-                                    variant={selectedType === type ? "default" : "outline"}
-                                    size="sm"
-                                    className={`w-31 rounded ${selectedType === type ? 'bg-blue-600 text-white' : ''} ${step1Errors.type ? 'border-red-500' : ''}`}
-                                    onClick={() => {
-                                      setSelectedType(type);
-                                      if (step1Errors.type) {
-                                        setStep1Errors(prev => ({ ...prev, type: false }));
-                                      }
-                                    }}
-                                  >
-                                    {type}
-                                  </Button>
-                                ))}
+                                {['Residential', 'Commercial'].map(type => {
+                                  const isDisabled = selectedAction === 'PG' && type === 'Commercial';
+                                  return (
+                                    <Button
+                                      key={type}
+                                      type="button"
+                                      variant={selectedType === type ? "default" : "outline"}
+                                      size="sm"
+                                      disabled={isDisabled}
+                                      className={`w-31 rounded ${selectedType === type ? 'bg-blue-600 text-white' : ''} ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                      onClick={() => !isDisabled && setSelectedType(type)}
+                                    >
+                                      {type}
+                                    </Button>
+                                  );
+                                })}
                               </div>
-                              {step1Errors.type && <p className="text-sm text-red-500">Please select a property type</p>}
                             </div>
 
-                            {propertySubtypes[selectedType]?.[selectedAction]?.length > 0 && (
+                            {propertyConfig[selectedType]?.[selectedAction]?.subtypes?.length > 0 && (
                               <div className="space-y-2">
-                                <Label className="text-base font-light">What kind of property do you have?</Label>
+                                <Label className="text-base font-light">Property Subtype</Label>
                                 <div className="flex flex-wrap gap-2">
-                                  {propertySubtypes[selectedType][selectedAction].map(subtype => (
+                                  {getAvailableSubtypes().map(subtype => (
                                     <Button
                                       key={subtype}
                                       type="button"
                                       variant={selectedSubtype === subtype ? "default" : "outline"}
                                       size="sm"
                                       className={`px-4 py-2 text-sm rounded ${
-                                        selectedSubtype === subtype 
-                                          ? 'bg-blue-600 text-white' 
-                                          : 'bg-white text-gray-800 border border-gray-300 hover:bg-gray-100'
-                                      } ${step1Errors.subtype ? 'border-red-500' : ''}`}
-                                      onClick={() => {
-                                        setSelectedSubtype(subtype);
-                                        if (step1Errors.subtype) {
-                                          setStep1Errors(prev => ({ ...prev, subtype: false }));
-                                        }
-                                      }}
+                                        selectedSubtype === subtype ? 'bg-blue-600 text-white' : 'bg-white text-gray-800 border border-gray-300 hover:bg-gray-100'
+                                      }`}
+                                      onClick={() => setSelectedSubtype(subtype)}
                                     >
                                       {subtype}
                                     </Button>
                                   ))}
                                 </div>
-                                {step1Errors.subtype && <p className="text-sm text-red-500">Please select a property subtype</p>}
                               </div>
                             )}
                           </>
                         )}
 
+                        {/* Step 2 - Location & Features */}
                         {step === 2 && (
-                          <div className="text-gray-700 space-y-6">
-                            {/* Location Fields */}
-                            <div className="space-y-4">
-                              <Label className="font-sm">Property Located</Label>
-                              <input
-                                type="text"
-                                placeholder="City"
-                                value={city}
-                                onChange={(e) => {
-                                  setCity(e.target.value);
-                                  if (step2Errors.city) {
-                                    setStep2Errors(prev => ({ ...prev, city: false }));
-                                  }
-                                }}
-                                className={`border p-2 w-full rounded ${step2Errors.city ? 'border-red-500' : ''}`}
-                              />
-                              {step2Errors.city && <p className="text-sm text-red-500">City is required</p>}
-
-                              <Label className="font-sm">Locality / Apartment</Label>
-                              <input
-                                type="text"
-                                placeholder="Locality"
-                                value={locality}
-                                onChange={(e) => {
-                                  setLocality(e.target.value);
-                                  if (step2Errors.locality) {
-                                    setStep2Errors(prev => ({ ...prev, locality: false }));
-                                  }
-                                }}
-                                className={`border p-2 w-full rounded ${step2Errors.locality ? 'border-red-500' : ''}`}
-                              />
-                              {step2Errors.locality && <p className="text-sm text-red-500">Locality is required</p>}
-
-                              <Label className="font-sm">Sub Locality</Label>
-                              <input
-                                type="text"
-                                placeholder="Sub Locality"
-                                value={subLocality}
-                                onChange={(e) => {
-                                  setSubLocality(e.target.value);
-                                  if (step2Errors.subLocality) {
-                                    setStep2Errors(prev => ({ ...prev, subLocality: false }));
-                                  }
-                                }}
-                                className={`border p-2 w-full rounded ${step2Errors.subLocality ? 'border-red-500' : ''}`}
-                              />
-                              {step2Errors.subLocality && <p className="text-sm text-red-500">Sub locality is required</p>}
-
-                              <Label className="font-sm">Apartment / Society</Label>
-                              <input
-                                type="text"
-                                placeholder="Society"
-                                value={society}
-                                onChange={(e) => {
-                                  setSociety(e.target.value);
-                                  if (step2Errors.society) {
-                                    setStep2Errors(prev => ({ ...prev, society: false }));
-                                  }
-                                }}
-                                className={`border p-2 w-full rounded ${step2Errors.society ? 'border-red-500' : ''}`}
-                              />
-                              {step2Errors.society && <p className="text-sm text-red-500">Society is required</p>}
-                            </div>
-
-                            {/* Amenities */}
-                            <div className="space-y-2">
-                              <h3 className="font-medium">Amenities</h3>
-                              <div className="flex flex-wrap gap-2">
-                                {features.amenities.map((item) => (
-                                  <button
-                                    key={item}
-                                    type="button"
-                                    onClick={() => toggleFeature("amenities", item)}
-                                    className={`px-3 py-1 border rounded text-sm transition ${
-                                      selectedFeatures.amenities.includes(item)
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-white text-gray-700'
-                                    }`}
-                                  >
-                                    {item}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Property Features */}
-                            <div className="space-y-2">
-                              <h3 className="font-medium">Property Features</h3>
-                              <div className="flex flex-wrap gap-2">
-                                {features.propertyFeatures.map((item) => (
-                                  <button
-                                    key={item}
-                                    type="button"
-                                    onClick={() => toggleFeature("propertyFeatures", item)}
-                                    className={`px-3 py-1 border rounded text-sm transition ${
-                                      selectedFeatures.propertyFeatures.includes(item)
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-white text-gray-700'
-                                    }`}
-                                  >
-                                    {item}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Society / Building Features */}
-                            <div className="space-y-2">
-                              <h3 className="font-medium">Society / Building Features</h3>
-                              <div className="flex flex-wrap gap-2">
-                                {features.societyFeatures.map((item) => (
-                                  <button
-                                    key={item}
-                                    type="button"
-                                    onClick={() => toggleFeature("societyFeatures", item)}
-                                    className={`px-3 py-1 border rounded text-sm transition ${
-                                      selectedFeatures.societyFeatures.includes(item)
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-white text-gray-700'
-                                    }`}
-                                  >
-                                    {item}
-                                  </button>
-                                ))}
-                              </div>
+                          <div className="text-gray-800 space-y-8 max-w-xl mt-4">
+                            <div className="grid grid-cols-1 gap-6">
+                              {[
+                                { label: "City", value: city, setter: setCity, type: "text", placeholder: "Enter city" },
+                                { label: "Locality", value: locality, setter: setLocality, type: "text", placeholder: "Enter locality" },
+                                { label: "Landmark / Sub Locality", value: subLocality, setter: setSubLocality, type: "text", placeholder: "Enter landmark or sub-locality" },
+                                { label: "Property Title", value: propertyTitle, setter: setPropertyTitle, type: "text", placeholder: "e.g. 2 BHK in Singanallur" },
+                                { label: "Google Map Link", value: googleMapLink, setter: setGoogleMapLink, type: "url", placeholder: "Paste Google Maps URL" },
+                              ].map((field, idx) => (
+                                <div key={idx} className="relative">
+                                  <input
+                                    type={field.type}
+                                    value={field.value}
+                                    onChange={(e) => field.setter(e.target.value)}
+                                    placeholder=" "
+                                    className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm transition-all focus:border-blue-600  focus:outline-none placeholder-transparent "
+                                  />
+                                  <label className="pointer-events-none absolute left-4 top-2 text-sm text-gray-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-600">
+                                    {field.label}
+                                  </label>
+                                </div>
+                              ))}
                             </div>
                           </div>
                         )}
 
+                        {/* Step 3 - Media */}
                         {step === 3 && (
-                          <div className="text-gray-700 space-y-6">
-                            <Label className="text-2xl">Tell us about your property</Label>
-
-                            <div className="space-y-6">
-                              <h3 className="text-lg font-semibold text-gray-800">Add Room Details</h3>
-
-                              {/* Bedrooms */}
-                              <div>
-                                <Label className="block text-sm font-medium mb-2">No. of Bedrooms *</Label>
-                                <div className="flex gap-2 mb-1 cursor-pointer">
-                                  {[1, 2, 3, 4, 5].map(num => (
-                                    <button
-                                      key={num}
-                                      type="button"
-                                      onClick={() => {
-                                        setBedrooms(num);
-                                        if (step3Errors.bedrooms) {
-                                          setStep3Errors(prev => ({ ...prev, bedrooms: false }));
-                                        }
-                                      }}
-                                      className={`w-10 h-10 rounded-full border ${
-                                        bedrooms === num
-                                          ? 'transition-colors duration-200 text-white bg-blue-600'
-                                          : 'border-gray-300 text-gray-600'
-                                      } ${
-                                        step3Errors.bedrooms ? 'border-red-500' : ''
-                                      }`}
-                                    >
-                                      {num}
-                                    </button>
-                                  ))}
-                                </div>                            
-                                {step3Errors.bedrooms && (
-                                  <p className="text-sm text-red-500 mt-1">Please select number of bedrooms</p>
-                                )}
-                              </div>
-
-                              {/* Bathrooms */}
-                              <div>
-                                <Label className="block text-sm font-medium mb-2">No. of Bathrooms *</Label>
-                                <div className="flex gap-2 mb-1">
-                                  {[1, 2, 3, 4, 5].map(num => (
-                                    <button
-                                      key={num}
-                                      type="button"
-                                      onClick={() => {
-                                        setBathrooms(num);
-                                        if (step3Errors.bathrooms) {
-                                          setStep3Errors(prev => ({ ...prev, bathrooms: false }));
-                                        }
-                                      }}
-                                      className={`w-10 h-10 rounded-full border ${
-                                        bathrooms === num
-                                          ? 'transition-colors duration-200 text-white bg-blue-600'
-                                          : 'border-gray-300 text-gray-600'
-                                      } ${
-                                        step3Errors.bathrooms ? 'border-red-500' : ''
-                                      }`}
-                                    >
-                                      {num}
-                                    </button>
-                                  ))}
-                                </div>
-                                {step3Errors.bathrooms && (
-                                  <p className="text-sm text-red-500 mt-1">Please select number of bathrooms</p>
-                                )}
-                              </div>
-
-                              {/* Balconies */}
-                              <div>
-                                <Label className="block text-sm font-medium mb-2">Balconies</Label>
-                                <div className="flex gap-2">
-                                  {[0, 1, 2, 3].map(num => (
-                                    <button
-                                      key={num}
-                                      type="button"
-                                      onClick={() => setBalconies(num)}
-                                      className={`w-10 h-10 rounded-full border ${
-                                        balconies === num
-                                          ? 'transition-colors duration-200 text-white bg-blue-600'
-                                          : 'border-gray-300 text-gray-600'
-                                      }`}
-                                    >
-                                      {num}
-                                    </button>
-                                  ))}
-                                  <button
-                                    type="button"
-                                    onClick={() => setBalconies(4)}
-                                    className={`px-4 h-10 rounded border ${
-                                      balconies === 4
-                                        ? 'transition-colors duration-200 text-white bg-blue-600'
-                                        : 'border-gray-300 text-gray-600'
-                                    }`}
-                                  >
-                                    More than 3
-                                  </button>
-                                </div>
-                              </div>
-
-                              {/* Area Details Section */}
-                              <div className="mt-6">
-                                <Label className="text-sm font-medium text-gray-700 flex items-center gap-1">
-                                  Add Area Details *
-                                  <span className="text-blue-600 cursor-pointer text-lg" title="Area detail helps buyers understand your property better"></span>
-                                </Label>
-                                <p className="text-xs text-gray-500 mb-2">At least one area type is mandatory</p>
-
-                                <div className={`flex items-center border rounded shadow-sm px-3 py-1 w-full max-w-md ${
-                                  step3Errors.carpetArea ? 'border-red-500' : ''
-                                }`}>
-                                  <div className="flex-1">
-                                    <Label className="text-xs text-gray-500">Carpet Area</Label>
-                                    <input
-                                      type="text"
-                                      value={carpetArea}
-                                      onChange={(e) => {
-                                        setCarpetArea(e.target.value);
-                                        if (step3Errors.carpetArea) {
-                                          setStep3Errors(prev => ({ ...prev, carpetArea: false }));
-                                        }
-                                      }}
-                                      placeholder="e.g. 1,111"
-                                      className="w-full text-base bg-transparent focus:outline-none"
-                                    />
-                                  </div>
-                                  <div className="border-l px-4">
-                                    <select
-                                      value={areaUnit}
-                                      onChange={(e) => setAreaUnit(e.target.value)}
-                                      className="bg-transparent focus:outline-none text-gray-700 text-sm p-5"
-                                    >
-                                      <option value="sq.ft.">sq.ft.</option>
-                                      <option value="sq.m.">sq.m.</option>
-                                      <option value="acres">acres</option>
-                                      <option value="gaj">cent</option>
-                                      <option value="hectare">hectare</option>
-                                    </select>
-                                  </div>
-                                </div>
-                                {step3Errors.carpetArea && (
-                                  <p className="text-sm text-red-500 mt-1">Please enter a valid carpet area</p>
-                                )}
-                              </div>
-
-                              {/* Other Rooms */}
-                              <div>
-                                <Label className="block text-sm font-medium mb-2">Other rooms</Label>
-                                <div className="flex gap-2 flex-wrap">
-                                  {["Pooja Room", "Study Room", "Servant Room", "Store Room"].map(room => (
-                                    <button
-                                      key={room}
-                                      type="button"
-                                      onClick={() =>
-                                        setOtherRooms(prev =>
-                                          prev.includes(room)
-                                            ? prev.filter(r => r !== room)
-                                            : [...prev, room]
-                                        )
-                                      }
-                                      className={`px-4 py-1 rounded border transition ${
-                                        otherRooms.includes(room)
-                                          ? ' text-white bg-blue-600'
-                                          : 'border-gray-300 text-gray-600'
-                                      }`}
-                                    >
-                                      {room}
-                                    </button>
-                                  ))}
-                                </div>
-                              </div>
-
-                              {/* Furnishing */}
-                              <div>
-                                <Label className="block text-sm font-medium mb-2">Furnishing </Label>
-                                <div className="flex gap-2">
-                                  {["Furnished", "Semi-furnished", "Un-furnished"].map(option => (
-                                    <button
-                                      key={option}
-                                      type="button"
-                                      onClick={() => setFurnishing(option)}
-                                      className={`px-4 py-1 rounded border transition ${
-                                        furnishing === option
-                                          ? ' text-white bg-blue-600'
-                                          : 'border-gray-300 text-gray-600'
-                                      }`}
-                                    >
-                                      {option}
-                                    </button>
-                                  ))}
-                                </div>
-                              </div>
-
-                              {/* Reserved Parking */}
-                              <div>
-                                <Label className="block text-sm font-medium mb-2">Reserved Parking</Label>
-                                <div className="flex items-center gap-6 flex-wrap">                              
-                                  {/* Covered Parking */}
-                                  <div className="flex items-center gap-2">
-                                    <span>Covered Parking</span>
-                                    <button
-                                      type="button"
-                                      onClick={() => setCoveredParking(Math.max(0, coveredParking - 1))}
-                                      disabled={coveredParking === 0}
-                                      className={`w-8 h-8 rounded-full border text-lg ${
-                                        coveredParking === 0 ? 'opacity-50 cursor-not-allowed' : ''
-                                      }`}
-                                    >
-                                      −
-                                    </button>
-                                    <span>{coveredParking}</span>
-                                    <button
-                                      type="button"
-                                      onClick={() => setCoveredParking(coveredParking + 1)}
-                                      className="w-8 h-8 rounded-full border text-lg"
-                                    >
-                                      +
-                                    </button>
-                                  </div>
-
-                                  {/* Open Parking */}
-                                  <div className="flex items-center gap-2">
-                                    <span>Open Parking</span>
-                                    <button
-                                      type="button"
-                                      onClick={() => setOpenParking(Math.max(0, openParking - 1))}
-                                      disabled={openParking === 0}
-                                      className={`w-8 h-8 rounded-full border text-lg ${
-                                        openParking === 0 ? 'opacity-50 cursor-not-allowed' : ''
-                                      }`}
-                                    >
-                                      −
-                                    </button>
-                                    <span>{openParking}</span>
-                                    <button
-                                      type="button"
-                                      onClick={() => setOpenParking(openParking + 1)}
-                                      className="w-8 h-8 rounded-full border text-lg"
-                                    >
-                                      +
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Floor Details */}
-                              <div>
-                                <Label className="block text-sm font-medium mb-1">Floor Details *</Label>
-                                <p className="text-sm text-gray-400 mb-2">Total no of floors and your floor details</p>
-                                <div className="grid grid-cols-2 gap-4">
-                                  <div>
-                                    <input
-                                      type="number"
-                                      placeholder="Total Floors"
-                                      className={`border rounded px-3 py-2 w-full ${
-                                        step3Errors.totalFloors ? 'border-red-500' : ''
-                                      }`}
-                                      value={totalFloors}
-                                      onChange={e => {
-                                        setTotalFloors(e.target.value);
-                                        if (step3Errors.totalFloors) {
-                                          setStep3Errors(prev => ({ ...prev, totalFloors: false }));
-                                        }
-                                      }}
-                                    />
-                                    {step3Errors.totalFloors && (
-                                      <p className="text-sm text-red-500 mt-1">Please enter total floors</p>
-                                    )}
-                                  </div>
-                                  <div>
-                                    <input
-                                      type="number"
-                                      placeholder="Property On the Floors"
-                                      className={`border rounded px-3 py-2 w-full ${
-                                        step3Errors.propertyOnFloor ? 'border-red-500' : ''
-                                      }`}
-                                      value={propertyOnFloor}
-                                      onChange={e => {
-                                        setPropertyOnFloor(e.target.value);
-                                        if (step3Errors.propertyOnFloor) {
-                                          setStep3Errors(prev => ({ ...prev, propertyOnFloor: false }));
-                                        }
-                                      }}
-                                    />
-                                    {step3Errors.propertyOnFloor && (
-                                      <p className="text-sm text-red-500 mt-1">Please enter property floor</p>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Availability Status */}
-                              <div>
-                                <Label className="block text-sm font-medium mb-2">Availability Status *</Label>
-                                <div className="flex gap-4">
-                                  {["Ready to move", "Under construction"].map(status => (
-                                    <button
-                                      key={status}
-                                      type="button"
-                                      onClick={() => {
-                                        setAvailability(status);
-                                        if (step3Errors.availability) {
-                                          setStep3Errors(prev => ({ ...prev, availability: false }));
-                                        }
-                                        // Reset dependent fields when changing availability
-                                        if (status === "Ready to move") {
-                                          setPossessionBy("");
-                                        } else {
-                                          setPropertyAge("");
-                                        }
-                                      }}
-                                      className={`px-4 py-2 rounded border transition-all ${
-                                        availability === status
-                                          ? "bg-blue-600 text-white border-blue-600"
-                                          : "bg-white text-gray-700 border-gray-300 hover:border-blue-400 hover:bg-gray-50"
-                                      } ${
-                                        step3Errors.availability ? 'border-red-500' : ''
-                                      }`}
-                                    >
-                                      {status}
-                                    </button>
-                                  ))}
-                                </div>
-                                {step3Errors.availability && (
-                                  <p className="text-sm text-red-500 mt-1">Please select availability status</p>
-                                )}
-
-                                {/* Age of property (if Ready to move) */}
-                                {availability === "Ready to move" && (
-                                  <div className="mt-4">
-                                    <Label className="block text-sm font-medium mb-2">Age of Property *</Label>
-                                    <div className="flex gap-3 flex-wrap">
-                                      {["0-1 years", "1-5 years", "5-10 years", "10+ years"].map(age => (
-                                        <button
-                                          key={age}
-                                          type="button"
-                                          onClick={() => {
-                                            setPropertyAge(age);
-                                            if (step3Errors.propertyAge) {
-                                              setStep3Errors(prev => ({ ...prev, propertyAge: false }));
-                                            }
-                                          }}
-                                          className={`px-4 py-1 rounded border ${
-                                            propertyAge === age
-                                              ? "bg-blue-600 text-white border-blue-600"
-                                              : "border-gray-300 text-gray-600 hover:border-blue-400 hover:bg-gray-50"
-                                          } ${
-                                            step3Errors.propertyAge ? 'border-red-500' : ''
-                                          }`}
-                                        >
-                                          {age}
-                                        </button>
-                                      ))}
-                                    </div>
-                                    {step3Errors.propertyAge && (
-                                      <p className="text-sm text-red-500 mt-1">Please select property age</p>
-                                    )}
-                                  </div>
-                                )}
-
-                                {/* Possession By (if Under construction) */}
-                                {availability === "Under construction" && (
-                                  <div className="mt-4">
-                                    <Label className="block text-sm font-medium mb-2">Possession By *</Label>
-                                    <select
-                                      className={`w-[300px] border rounded px-4 py-2 text-gray-700 ${
-                                        step3Errors.possessionBy ? 'border-red-500' : 'border-gray-300'
-                                      }`}
-                                      value={possessionBy}
-                                      onChange={(e) => {
-                                        setPossessionBy(e.target.value);
-                                        if (step3Errors.possessionBy) {
-                                          setStep3Errors(prev => ({ ...prev, possessionBy: false }));
-                                        }
-                                      }}
-                                    >
-                                      <option value="" disabled>Expected by</option>
-                                      <option value="3months">Within 3 months</option>
-                                      <option value="6months">Within 6 months</option>
-                                      {Array.from({ length: 6 }, (_, i) => {
-                                        const year = new Date().getFullYear() + i;
-                                        return (
-                                          <option key={year} value={year}>
-                                            {year}
-                                          </option>
-                                        );
-                                      })}
-                                    </select>
-                                    {step3Errors.possessionBy && (
-                                      <p className="text-sm text-red-500 mt-1">Please select expected possession date</p>
-                                    )}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {step === 4 && (
                           <div className="text-gray-700 space-y-8">
                             {/* Video Upload */}
                             <div>
@@ -1154,7 +2325,7 @@ const PostProperty = () => {
                                     </button>
                                     <h2 className="text-lg font-semibold mb-2">Video Guidelines</h2>
                                     <p className="text-sm text-gray-600 mb-4">Here is list of do's and don'ts of video content</p>
-                                    <ul className="space-y-1 text-sm">
+                                    <ul className="space-y-2 p-3 text-sm">
                                       <li className="text-green-600"><GiCheckMark className='inline-block text-black'/> Provide a walkthrough of the property</li>
                                       <li className="text-green-600"><GiCheckMark className='inline-block text-black'/> Cover all rooms</li>
                                       <li className="text-green-600"><GiCheckMark className='inline-block text-black'/> Typical video duration: 60s to 120s</li>
@@ -1234,7 +2405,7 @@ const PostProperty = () => {
 
                               {/* Upload Box */}
                               <div
-                                className={`border-2 border-dashed ${step4Errors.photos ? 'border-red-500' : 'border-blue-400'} p-6 rounded-md text-center bg-blue-50`}
+                                className="border-2 border-dashed border-blue-400 p-6 rounded-md text-center bg-blue-50"
                                 onDragOver={(e) => e.preventDefault()}
                                 onDrop={(e) => {
                                   e.preventDefault();
@@ -1268,9 +2439,6 @@ const PostProperty = () => {
                                   </p>
                                 )}
                               </div>
-                              {step4Errors.photos && (
-                                <p className="text-sm text-red-500 mt-2">Please upload at least 3 photos</p>
-                              )}
 
                               {/* Thumbnails */}
                               {photos.length > 0 && (
@@ -1357,215 +2525,26 @@ const PostProperty = () => {
                           </div>
                         )}
 
-                        {step === 5 && (
-                          <div className="space-y-8 text-gray-800 relative">
-                            {/* Ownership */}
-                            <div id="ownership-field">
-                              <h2 className="text-lg font-semibold mb-2 flex items-center gap-2 relative">
-                                Ownership *
-                                <span
-                                  onMouseEnter={() => setIsHovered(true)}
-                                  onMouseLeave={() => setIsHovered(false)}
-                                  className="text-gray-400 cursor-pointer relative"
-                                >
-                                  <BsPatchQuestionFill className="text-lg" />
-                                  {isHovered && (
-                                    <div className="absolute z-50 w-80 p-4 bg-white border border-gray-300 rounded-md shadow-md text-sm top-6 left-4">
-                                      <h3 className="font-semibold mb-2">Types of Ownerships</h3>
-                                      <p><strong>Freehold:</strong> Full and unconditional ownership.</p>
-                                      <p><strong>Leasehold:</strong> Partial ownership for a fixed term (90–99 years).</p>
-                                      <p><strong>Co-operative society:</strong> Group-based legal co-ownership.</p>
-                                      <p><strong>Power of Attorney:</strong> Legal authority to act on owner's behalf.</p>
-                                    </div>
-                                  )}
-                                </span>
-                              </h2>
-                              <div className="flex flex-wrap gap-2">
-                                {['Freehold', 'Leasehold', 'Co-operative society', 'Power of Attorney'].map(option => (
-                                  <button
-                                    key={option}
-                                    type="button"
-                                    onClick={() => {
-                                      setOwnership(option);
-                                      if (step5Errors.ownership) {
-                                        setStep5Errors(prev => ({ ...prev, ownership: false }));
-                                      }
-                                    }}
-                                    className={`px-4 py-1 rounded border transition ${
-                                      ownership === option ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'
-                                    } ${step5Errors.ownership ? 'border-red-500' : ''}`}
-                                  >
-                                    {option}
-                                  </button>
-                                ))}
-                              </div>
-                              {step5Errors.ownership && <p className="text-red-500 text-sm mt-1">Please select an ownership type</p>}
-                            </div>
-
-                            {/* Price Details */}
-                            <div id="price-details-field">
-                              <h2 className="text-lg font-semibold mb-3">Price Details *</h2>
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                  <input
-                                    type="number"
-                                    id="expected-price-field"
-                                    placeholder="₹ Expected Price"
-                                    value={expectedPrice}
-                                    onChange={(e) => {
-                                      setExpectedPrice(e.target.value);
-                                      if (step5Errors.expectedPrice) {
-                                        setStep5Errors(prev => ({ ...prev, expectedPrice: false }));
-                                      }
-                                    }}
-                                    className={`border rounded-md px-3 py-2 w-full ${step5Errors.expectedPrice ? 'border-red-500' : ''}`}
-                                  />
-                                  {step5Errors.expectedPrice && <p className="text-red-500 text-sm mt-1">Expected price must be a positive number</p>}
-                                </div>
-                                <div>
-                                  <input
-                                    type="number"
-                                    id="price-per-sqft-field"
-                                    placeholder="₹ Price per sq.ft."
-                                    value={pricePerSqft}
-                                    onChange={(e) => {
-                                      setPricePerSqft(e.target.value);
-                                      if (step5Errors.pricePerSqft) {
-                                        setStep5Errors(prev => ({ ...prev, pricePerSqft: false }));
-                                      }
-                                    }}
-                                    className={`border rounded-md px-3 py-2 w-full ${step5Errors.pricePerSqft ? 'border-red-500' : ''}`}
-                                  />
-                                  {step5Errors.pricePerSqft && <p className="text-red-500 text-sm mt-1">Price per sq.ft. must be a positive number</p>}
-                                </div>
-                              </div>
-
-                              {/* Price options checkboxes */}
-                              <div className="mt-4 flex flex-col gap-2 text-sm">
-                                <label className="flex items-center gap-2 group relative">
-                                  <input
-                                    type="checkbox"
-                                    checked={allInclusive}
-                                    onChange={(e) => setAllInclusive(e.target.checked)}
-                                  />
-                                  All inclusive price
-                                  <span className="text-gray-400 cursor-pointer">
-                                    <BsPatchQuestionFill />
-                                    <div className="absolute right-10 top-0 z-50 w-80 p-4 bg-white border border-gray-300 rounded-md shadow-lg text-sm text-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
-                                      <h3 className="font-semibold mb-2">All Inclusive Price</h3>
-                                      <p>Includes:</p>
-                                      <ul className="list-disc list-inside space-y-1 pl-2">
-                                        <li>Base Price</li>
-                                        <li>PLC Charges</li>
-                                        <li>Parking</li>
-                                        <li>EDC/IDC</li>
-                                        <li>Lease Rent</li>
-                                        <li>Maintenance</li>
-                                        <li>Infrastructure fees</li>
-                                        <li>Amenities</li>
-                                        <li>Club Membership</li>
-                                        <li>Power Back-up</li>
-                                      </ul>
-                                    </div>
-                                  </span>
-                                </label>
-
-                                <label className="flex items-center gap-2">
-                                  <input
-                                    type="checkbox"
-                                    checked={taxExcluded}
-                                    onChange={(e) => setTaxExcluded(e.target.checked)}
-                                  />
-                                  Tax and Govt. charges excluded
-                                </label>
-
-                                <label className="flex items-center gap-2">
-                                  <input
-                                    type="checkbox"
-                                    checked={priceNegotiable}
-                                    onChange={(e) => setPriceNegotiable(e.target.checked)}
-                                  />
-                                  Price Negotiable
-                                </label>
-                              </div>
-                            </div>
-
-                            {/* Brokerage */}
-                            <div id="brokerage-field">
-                              <h2 className="text-lg font-semibold mb-2">Do you charge brokerage? *</h2>
-                              <div className="flex items-center gap-6">
-                                {['Yes', 'No'].map(option => (
-                                  <label key={option} className="flex items-center gap-2">
-                                    <input
-                                      type="radio"
-                                      value={option}
-                                      checked={brokerage === option}
-                                      onChange={(e) => {
-                                        setBrokerage(e.target.value);
-                                        if (step5Errors.brokerage) {
-                                          setStep5Errors(prev => ({ ...prev, brokerage: false }));
-                                        }
-                                      }}
-                                    />
-                                    {option}
-                                  </label>
-                                ))}
-                              </div>
-                              {step5Errors.brokerage && <p className="text-red-500 text-sm mt-1">Please select whether brokerage is charged</p>}
-                            </div>
-
-                            {/* Property Description */}
-                            <div id="description-field">
-                              <h2 className="text-lg font-semibold mb-1">What makes your property unique *</h2>
-                              <p className="text-sm text-gray-500 mb-2">Adding description will increase your listing visibility</p>
-                              <textarea
-                                className={`resize-none w-full border rounded-md p-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 ${
-                                  step5Errors.description 
-                                    ? 'border-red-500 focus:ring-red-500' 
-                                    : propertyDescription.trim().length >= 30 
-                                      ? 'border-green-500 focus:ring-green-500' 
-                                      : 'border-gray-300'
-                                }`}
-                                rows={5}
-                                placeholder="Share some details about your property like spacious rooms, well maintained facilities..."
-                                value={propertyDescription}
-                                onChange={(e) => {
-                                  const val = e.target.value;
-                                  if (val.length <= 5000) {
-                                    setPropertyDescription(val);
-                                    if (step5Errors.description) {
-                                      setStep5Errors(prev => ({ ...prev, description: false }));
-                                    }
-                                  }
-                                }}
-                              />
-                              <div className="flex justify-between mt-1 text-sm">
-                                <span className={
-                                  step5Errors.description 
-                                    ? "text-red-500" 
-                                    : propertyDescription.trim().length >= 30 
-                                      ? "text-green-600" 
-                                      : "text-gray-500"
-                                }>
-                                  {step5Errors.description 
-                                    ? "Minimum 30 characters required" 
-                                    : propertyDescription.trim().length >= 30 
-                                      ? "Looks good!" 
-                                      : `${propertyDescription.trim().length} characters`}
-                                </span>
-                                <span className="text-gray-500">
-                                  {propertyDescription.trim().length} characters / 5000 max
-                                </span>
-                              </div>
-                            </div>
+                        {/* Step 4 - Property Details */}
+                        {step === 4 && (
+                          <div className="h-full">
+                            {renderDynamicFieldsStep4()}
                           </div>
                         )}
 
+                        {/* Step 5 - Pricing */}
+                        {step === 5 && (
+                          <div className="h-full">
+                            {renderDynamicFieldsStep5()}
+                          </div>
+                        )}
+
+                        {/* Step 6 - Company Details */}
                         {step === 6 && (
                           <div>
                             <div className="max-w-3xl mx-auto px-6 py-10">
                               <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-2">
-                                Before you post... Let buyers know who you are
+                                Before you post… Let buyers know who you are
                               </h2>
                               <p className="text-gray-600 mb-8">
                                 These details will help serious buyers to connect with you and inspire trust
@@ -1573,168 +2552,214 @@ const PostProperty = () => {
 
                               {/* RERA Registration */}
                               <div className="mb-6">
-                                <label className="block font-medium mb-2">Are you RERA registered? *</label>
+                                <label className="block font-medium mb-2">Are you RERA registered?</label>
                                 <div className="flex flex-wrap gap-3">
                                   {["Yes", "I have applied", "Not Applicable"].map((option) => (
                                     <button
                                       key={option}
                                       type="button"
-                                      onClick={() => {
-                                        setReraStatus(option);
-                                        if (step6Errors.reraStatus) {
-                                          setStep6Errors(prev => ({ ...prev, reraStatus: false }));
-                                        }
-                                      }}
+                                      onClick={() => handleCompanyDetailChange('reraStatus', option)}
                                       className={`px-4 py-2 border rounded text-sm font-medium transition ${
-                                        reraStatus === option
+                                        companyDetails.reraStatus === option
                                           ? 'bg-blue-500 text-white border-blue-500'
                                           : 'text-gray-700 hover:bg-gray-100 hover:border-blue-500'
-                                      } ${step6Errors.reraStatus ? 'border-red-500' : ''}`}
+                                      }`}
                                     >
                                       {option}
                                     </button>
                                   ))}
                                 </div>
-                                {step6Errors.reraStatus && <p className="text-red-500 text-sm mt-1">Please select RERA status</p>}
                               </div>
 
                               {/* License Type */}
                               <div className="mb-6">
-                                <label className="block font-medium mb-2">License Type *</label>
+                                <label className="block font-medium mb-2">License Type</label>
                                 <div className="flex gap-4">
                                   {["Individual", "Firm"].map((type) => (
                                     <button
                                       key={type}
                                       type="button"
-                                      onClick={() => {
-                                        setLicenseType(type);
-                                        if (step6Errors.licenseType) {
-                                          setStep6Errors(prev => ({ ...prev, licenseType: false }));
-                                        }
-                                      }}
+                                      onClick={() => handleCompanyDetailChange('licenseType', type)}
                                       className={`px-4 py-2 border rounded text-sm font-medium transition ${
-                                        licenseType === type
+                                        companyDetails.licenseType === type
                                           ? 'bg-blue-500 text-white border-blue-500'
                                           : 'text-gray-700 hover:bg-gray-100 hover:border-blue-500'
-                                      } ${step6Errors.licenseType ? 'border-red-500' : ''}`}
+                                      }`}
                                     >
                                       {type}
                                     </button>
                                   ))}
                                 </div>
-                                {step6Errors.licenseType && <p className="text-red-500 text-sm mt-1">Please select license type</p>}
                               </div>
+
+                              {/* Individual Personal Details */}
+                              {companyDetails.licenseType === "Individual" && (
+                                <div className="mb-6">
+                                  <h3 className="text-lg font-medium mb-3">Your Personal Details</h3>
+                                  <div className="space-y-4">
+                                    <div className="relative">
+                                      <input
+                                        type="text"
+                                        value={companyDetails.fullName}
+                                        onChange={(e) => handleCompanyDetailChange('fullName', e.target.value)}
+                                        placeholder=" "
+                                        className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm transition-all focus:border-blue-600 focus:outline-none placeholder-transparent"
+                                      />
+                                      <label className="absolute left-4 top-2 text-gray-500 text-sm transition-all transform scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:top-4 peer-focus:scale-75 peer-focus:top-2">
+                                        Full Name
+                                      </label>
+                                    </div>
+                                    <div className="relative">
+                                      <input
+                                        type="email"
+                                        value={companyDetails.email}
+                                        onChange={(e) => handleCompanyDetailChange('email', e.target.value)}
+                                        placeholder=" "
+                                        className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm transition-all focus:border-blue-600 focus:outline-none placeholder-transparent"
+                                      />
+                                      <label className="absolute left-4 top-2 text-gray-500 text-sm transition-all transform scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:top-4 peer-focus:scale-75 peer-focus:top-2">
+                                        Email
+                                      </label>
+                                    </div>
+                                    <div className="relative">
+                                      <input
+                                        type="tel"
+                                        value={companyDetails.phone}
+                                        onChange={(e) => handleCompanyDetailChange('phone', e.target.value)}
+                                        placeholder=" "
+                                        className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm transition-all focus:border-blue-600 focus:outline-none placeholder-transparent"
+                                      />
+                                      <label className="absolute left-4 top-2 text-gray-500 text-sm transition-all transform scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:top-4 peer-focus:scale-75 peer-focus:top-2">
+                                        Phone Number
+                                      </label>
+                                    </div>
+                                    <div className="relative">
+                                      <input
+                                        type="text"
+                                        value={companyDetails.address}
+                                        onChange={(e) => handleCompanyDetailChange('address', e.target.value)}
+                                        placeholder=" "
+                                        className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm transition-all focus:border-blue-600 focus:outline-none placeholder-transparent"
+                                      />
+                                      <label className="absolute left-4 top-2 text-gray-500 text-sm transition-all transform scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:top-4 peer-focus:scale-75 peer-focus:top-2">
+                                        Your Address
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
 
                               {/* Company Details */}
-                              <div className="mb-6">
-                                <h3 className="text-lg font-medium mb-3">Company Details</h3>
-                                <div className="space-y-4">
-                                  <div>
-                                    <input
-                                      type="text"
-                                      placeholder="Company Name *"
-                                      value={companyName}
-                                      onChange={(e) => {
-                                        setCompanyName(e.target.value);
-                                        if (step6Errors.companyName) {
-                                          setStep6Errors(prev => ({ ...prev, companyName: false }));
-                                        }
-                                      }}
-                                      className={`w-full p-3 border rounded focus:outline-blue-500 ${
-                                        step6Errors.companyName ? 'border-red-500' : ''
-                                      }`}
-                                    />
-                                    {step6Errors.companyName && <p className="text-red-500 text-sm mt-1">Company name is required</p>}
-                                  </div>
-                                  
-                                  <input
-                                    type="text"
-                                    placeholder="Company URL (Optional)"
-                                    className="w-full p-3 border rounded focus:outline-blue-500"
-                                  />
-                                  
-                                  <div>
-                                    <input
-                                      type="text"
-                                      placeholder="Company Address 1 *"
-                                      value={companyAddress1}
-                                      onChange={(e) => {
-                                        setCompanyAddress1(e.target.value);
-                                        if (step6Errors.companyAddress1) {
-                                          setStep6Errors(prev => ({ ...prev, companyAddress1: false }));
-                                        }
-                                      }}
-                                      className={`w-full p-3 border rounded focus:outline-blue-500 ${
-                                        step6Errors.companyAddress1 ? 'border-red-500' : ''
-                                      }`}
-                                    />
-                                    {step6Errors.companyAddress1 && <p className="text-red-500 text-sm mt-1">Company address is required</p>}
-                                  </div>
-                                  
-                                  <input
-                                    type="text"
-                                    placeholder="Company Address 2 (Optional)"
-                                    className="w-full p-3 border rounded focus:outline-blue-500"
-                                  />
-                                  
-                                  <div>
-                                    <input
-                                      type="text"
-                                      placeholder="City *"
-                                      value={location}
-                                      onChange={(e) => {
-                                        setLocation(e.target.value);
-                                        if (step6Errors.location) {
-                                          setStep6Errors(prev => ({ ...prev, location: false }));
-                                        }
-                                      }}
-                                      className={`w-full p-3 border rounded focus:outline-blue-500 ${
-                                        step6Errors.location ? 'border-red-500' : ''
-                                      }`}
-                                    />
-                                    {step6Errors.location && <p className="text-red-500 text-sm mt-1">City is required</p>}
+                              {companyDetails.licenseType === "Firm" && (
+                                <div className="mb-6">
+                                  <h3 className="text-lg font-medium mb-3">Company Details</h3>
+                                  <div className="space-y-4">
+                                    <div className="relative">
+                                      <input
+                                        type="text"
+                                        value={companyDetails.companyName}
+                                        onChange={(e) => handleCompanyDetailChange('companyName', e.target.value)}
+                                        placeholder=" "
+                                        className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm transition-all focus:border-blue-600 focus:outline-none placeholder-transparent"
+                                      />
+                                      <label className="absolute left-4 top-2 text-gray-500 text-sm transition-all transform scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:top-4 peer-focus:scale-75 peer-focus:top-2">
+                                        Company Name
+                                      </label>
+                                    </div>
+                                    <div className="relative">
+                                      <input
+                                        type="text"
+                                        placeholder="Company URL (Optional)"
+                                        className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm transition-all focus:border-blue-600 focus:outline-none placeholder-transparent"
+                                      />
+                                      <label className="absolute left-4 top-2 text-gray-500 text-sm transition-all transform scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:top-4 peer-focus:scale-75 peer-focus:top-2">
+                                        Company URL
+                                      </label>
+                                    </div>
+                                    <div className="relative">
+                                      <input
+                                        type="text"
+                                        value={companyDetails.companyAddress1}
+                                        onChange={(e) => handleCompanyDetailChange('companyAddress1', e.target.value)}
+                                        placeholder=" "
+                                        className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm transition-all focus:border-blue-600 focus:outline-none placeholder-transparent"
+                                      />
+                                      <label className="absolute left-4 top-2 text-gray-500 text-sm transition-all transform scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:top-4 peer-focus:scale-75 peer-focus:top-2">
+                                        Company Address 1
+                                      </label>
+                                    </div>
+                                    <div className="relative">
+                                      <input
+                                        type="text"
+                                        placeholder="Company Address 2 (Optional)"
+                                        className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm transition-all focus:border-blue-600 focus:outline-none placeholder-transparent"
+                                      />
+                                      <label className="absolute left-4 top-2 text-gray-500 text-sm transition-all transform scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:top-4 peer-focus:scale-75 peer-focus:top-2">
+                                        Company Address 2
+                                      </label>
+                                    </div>
+                                    <div className="relative">
+                                      <input
+                                        type="text"
+                                        value={companyDetails.location}
+                                        onChange={(e) => handleCompanyDetailChange('location', e.target.value)}
+                                        placeholder=" "
+                                        className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm transition-all focus:border-blue-600 focus:outline-none placeholder-transparent"
+                                      />
+                                      <label className="absolute left-4 top-2 text-gray-500 text-sm transition-all transform scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:top-4 peer-focus:scale-75 peer-focus:top-2">
+                                        City
+                                      </label>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
+                              )}
 
                               {/* Company Description */}
-                              <div className="mb-6">
-                                <label className="block font-medium mb-2">Describe your company *</label>
-                                <textarea
-                                  rows="4"
-                                  placeholder="Write here what makes your company unique (minimum 30 characters)"
-                                  value={companyDesc}
-                                  onChange={(e) => {
-                                    setCompanyDesc(e.target.value);
-                                    if (step6Errors.companyDesc) {
-                                      setStep6Errors(prev => ({ ...prev, companyDesc: false }));
-                                    }
-                                  }}
-                                  className={`w-full p-3 border rounded resize-none focus:outline-blue-500 ${
-                                    step6Errors.companyDesc ? 'border-red-500' : ''
-                                  }`}
-                                ></textarea>
-                                <div className="flex justify-between mt-1 text-sm">
-                                  <span className={step6Errors.companyDesc ? "text-red-500" : "text-gray-500"}>
-                                    {step6Errors.companyDesc 
-                                      ? "Minimum 30 characters required" 
-                                      : `${companyDesc.trim().length} characters`}
-                                  </span>
-                                  <span className="text-gray-500">Minimum 30 characters</span>
+                              {companyDetails.licenseType === "Firm" && (
+                                <div className="mb-6">
+                                  <label className="block font-medium mb-2">Describe your company</label>
+                                  <div className="relative">
+                                    <textarea
+                                      rows="4"
+                                      placeholder=" "
+                                      value={companyDetails.companyDesc}
+                                      onChange={(e) => handleCompanyDetailChange('companyDesc', e.target.value)}
+                                      className="peer block w-full appearance-none border border-gray-300 bg-white/60 backdrop-blur-md rounded-sm px-4 pt-6 pb-2 text-base shadow-sm transition-all focus:border-blue-600 focus:outline-none placeholder-transparent resize-none"
+                                    ></textarea>
+                                    <label className="absolute left-4 top-2 text-gray-500 text-sm transition-all transform scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:top-4 peer-focus:scale-75 peer-focus:top-2">
+                                      Company Description
+                                    </label>
+                                  </div>
+                                  <div className="flex justify-between mt-1 text-sm">
+                                    <span className="text-gray-500">
+                                      {companyDetails.companyDesc.trim().length} characters
+                                    </span>
+                                    <span className="text-gray-500">Minimum 30 characters recommended</span>
+                                  </div>
                                 </div>
-                              </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Step 7 - Review */}
+                        {step === 7 && (
+                          <div className="space-y-8">
+                            <h2 className="text-2xl font-bold mb-6">Review Your Property Details</h2>
+                            <div className="text-center py-10">
+                              <p className="text-lg">Review step will be implemented here</p>
                             </div>
                           </div>
                         )}
 
                         {/* Step Navigation */}
                         <div className="flex justify-between items-center pt-4">
-                          {step > 1 && (
-                            <Button type="button" onClick={handleBack} variant="outline">
+                          {step > 1 && step <= 6 && (
+                            <Button type="button" onClick={handleBack} variant="outline" className=" hover:bg-blue-600 hover:text-white transition duration-500">
                               Back
                             </Button>
                           )}
-                          {step < 6 ? (
+                          {step < 7 ? (
                             <Button
                               type="button"
                               onClick={handleNext}
@@ -1743,11 +2768,7 @@ const PostProperty = () => {
                             >
                               Next
                             </Button>
-                          ) : (
-                            <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white">
-                              Submit
-                            </Button>
-                          )}
+                          ) : null}
                         </div>
                       </form>
                     </CardContent>
